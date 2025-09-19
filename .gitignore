@@ -77,3 +77,6 @@ node_modules/
 # HTML files #
 *.html
 !*Docker.html
+
+# Presentation files #
+!presentations/qmd/images/**
