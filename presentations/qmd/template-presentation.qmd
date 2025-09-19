@@ -1,0 +1,68 @@
+---
+title: "Presentation Title"
+author: "Oleksandr Koval"
+date: "`r Sys.Date()`"
+format: 
+  revealjs:
+    theme: dark
+    slide-number: true
+    chalkboard: true
+    preview-links: auto
+    css: custom.css
+---
+
+## Introduction
+
+- Welcome to the presentation
+- Overview of topics
+- Goals and objectives
+
+## Content Slide
+
+- Key point 1
+- Key point 2
+- Key point 3
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Example R code
+data <- c(1, 2, 3, 4, 5)
+mean(data)
+```
+
+## Data Visualization
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Load required libraries
+library(ggplot2)
+
+# Create sample data
+sample_data <- data.frame(
+  x = 1:10,
+  y = rnorm(10)
+)
+
+# Create plot
+ggplot(sample_data, aes(x = x, y = y)) +
+  geom_line() +
+  theme_minimal() +
+  labs(title = "Sample Visualization",
+       x = "X Axis",
+       y = "Y Axis")
+```
+
+## Conclusion
+
+- Summary of key points
+- Next steps
+- Thank you for your attention
+
+## Questions?
+
+Contact: Oleksandr Koval (@oleksandkov)

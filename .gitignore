@@ -1,0 +1,50 @@
+# Build artifacts and dependencies
+*.o
+*.class
+*.exe
+*.jar
+*.so
+*.dylib
+*.dll
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# R specific
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Java specific
+target/
+*.log
+
+# C++ specific
+*.out
+build/
+cmake-build-*/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Quarto specific
+.quarto/
+*_files/
+*_cache/
+
+# Data files (optional - uncomment if you don't want to track data)
+# *.csv
+# *.xlsx
+# *.json
+# *.xml
