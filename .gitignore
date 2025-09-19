@@ -52,3 +52,28 @@ node_modules/
 # Quarto
 .quarto/
 /_site/
+
+
+# Compiled source #
+*.js
+*.class
+*.png
+*.pdf
+*.jpeg
+*.jpg
+*.yaml
+*.css 
+*.woff
+*.woff2
+*.yaml
+*.yml
+*.ttf
+*.ttf
+*.svg
+*.eot
+*.txt
+*.map
+
+# HTML files #
+*.html
+!*Docker.html
