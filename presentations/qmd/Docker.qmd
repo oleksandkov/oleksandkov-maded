@@ -1,6 +1,6 @@
 ---
 title: "Docker and Containers"
-format:
+format: 
   revealjs:
     theme: dark
     footer: "By oleksandkov"
@@ -23,8 +23,8 @@ format:
 
 ::: {.panel}
 **Docker** Це платформа для розробки, доставки та запуску додатків у контейнерах.
-![Docker Logo](docker.png)
-:::
+![Docker Logo](images/docker.png)
+::: 
 
 ---
 
@@ -44,7 +44,7 @@ format:
 - легко переноситься
 :::
 ::: {.column width="50%"}
-![](docker_container_layers.png)
+![](images/docker_container_layers.png)
 :::
 
 
@@ -157,7 +157,7 @@ format:
 
 # Як працює Docker?
 
-![](Docker-example-1.jpg)
+![](images/Docker-example-1.jpg)
 
 
 ## Dockerfile - інструкції для створення image (образу)
