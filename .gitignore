@@ -1,0 +1,54 @@
+# Build artifacts and outputs
+*.exe
+*.out
+*.class
+*.o
+*.so
+*.dll
+
+# R specific
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Java specific
+target/
+*.jar
+*.war
+*.ear
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Log files
+*.log
+
+# Package files
+node_modules/
+*.tgz
+*.tar.gz
+
+# Quarto
+.quarto/
+/_site/

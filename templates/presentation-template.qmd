@@ -1,0 +1,47 @@
+---
+title: "Presentation Title"
+author: "Oleksandr Koval (@oleksandkov)"
+date: "`r Sys.Date()`"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+    preview-links: auto
+    logo: ""
+    footer: "@oleksandkov"
+---
+
+## Introduction
+
+- Overview of the topic
+- Key objectives
+- Structure of presentation
+
+## Main Content
+
+### Section 1
+
+Your content here...
+
+### Section 2
+
+More content...
+
+## Key Findings
+
+- Important point 1
+- Important point 2
+- Important point 3
+
+## Conclusion
+
+- Summary of main points
+- Implications
+- Next steps
+
+## Questions & Discussion
+
+Thank you for your attention!
+
+Contact: [your-email@example.com]
