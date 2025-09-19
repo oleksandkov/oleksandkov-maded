@@ -2,8 +2,6 @@
 
 This directory contains Quarto Markdown presentation files.
 
-## Featured Presentations
-- `portfolio-showcase.qmd` - Overview of the portfolio repository
 
 ## Requirements
 - Quarto CLI
