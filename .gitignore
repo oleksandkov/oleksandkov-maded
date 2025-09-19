@@ -80,3 +80,4 @@ node_modules/
 
 # Presentation files #
 !presentations/qmd/images/**
+!presentations/qmd/Docker.pdf
