@@ -4,7 +4,7 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 
 # MY WORKS
 
-- [DOCKER AND CONTAINTERS](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qmd/Docker.html?token=GHSAT0AAAAAADLC6LNKZM57QTW2X3D7RCPE2GNPP3A) -- presentation about `Docker` and Containers
+- [DOCKER AND CONTAINTERS](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qmd/Docker.html) -- presentation about `Docker` and Containers
 
 ## 📁 Repository Structure
 
