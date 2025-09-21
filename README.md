@@ -2,6 +2,10 @@
 
 Welcome to my comprehensive portfolio repository! This collection showcases my work across multiple programming languages, data analysis, presentations, and technical projects.
 
+# CHECK MY WEBSITE 
+
+- [MY WEB](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/website/index.html) -- you can find my web here
+
 # MY WORKS
 
 - [DOCKER AND CONTAINTERS](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qmd/Docker.html) -- presentation about `Docker` and Containers
