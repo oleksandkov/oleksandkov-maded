@@ -93,6 +93,18 @@ body {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.hamburger:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.hamburger:focus {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
 }
 
 .bar {
@@ -178,6 +190,11 @@ body {
     border: 2px solid transparent;
     cursor: pointer;
     font-size: 1rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .btn-primary {
@@ -874,6 +891,31 @@ section {
 }
 
 /* Responsive Design */
+
+/* Tablet styles */
+@media (max-width: 1024px) {
+    .hero-container {
+        gap: 3rem;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .profile-img {
+        width: 400px;
+        height: 500px;
+    }
+    
+    .soft-skills-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .works-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
     .hamburger {
         display: flex;
@@ -916,14 +958,34 @@ section {
         grid-template-columns: 1fr;
         text-align: center;
         gap: 2rem;
+        padding: 0 15px;
     }
 
     .hero-title {
         font-size: 2.5rem;
+        line-height: 1.1;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+        padding: 0 10px;
     }
 
     .hero-buttons {
         justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .profile-img {
+        width: 280px;
+        height: 350px;
+        max-width: 100%;
     }
 
     .contact-content {
@@ -933,34 +995,273 @@ section {
 
     .about-stats {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .skills-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .projects-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .soft-skills-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .works-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    .skill-category {
+        padding: 1.5rem;
+    }
+
+    .soft-skill-item {
+        padding: 2rem 1.5rem;
+    }
+
+    .work-item {
+        padding: 1.5rem;
+    }
+
+    .contact-form {
+        padding: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+        width: 200px;
+    }
+    
+    /* Improve touch targets */
+    .nav-link {
+        padding: 12px 16px;
+        display: block;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .social-link {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .work-btn {
+        min-height: 44px;
+    }
+    
+    /* Prevent horizontal scroll */
+    body {
+        overflow-x: hidden;
+    }
+    
+    /* Improve text readability */
+    .hero-description,
+    .about-text p,
+    .soft-skill-item p,
+    .work-content p {
+        line-height: 1.6;
     }
 }
 
 @media (max-width: 480px) {
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .hero-description {
+        font-size: 0.95rem;
+        padding: 0 5px;
     }
 
     .section-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
     }
 
     .btn {
-        padding: 10px 20px;
+        padding: 8px 20px;
         font-size: 0.9rem;
+        width: 180px;
     }
 
     .hero-buttons {
         flex-direction: column;
         align-items: center;
+        gap: 0.8rem;
+    }
+
+    .profile-img {
+        width: 250px;
+        height: 300px;
+    }
+
+    .container {
+        padding: 0 10px;
+    }
+
+    section {
+        padding: 50px 0;
+    }
+
+    .nav-container {
+        padding: 0 15px;
+    }
+
+    .skill-category {
+        padding: 1.2rem;
+    }
+
+    .soft-skill-item {
+        padding: 1.5rem 1.2rem;
+    }
+
+    .work-item {
+        padding: 1.2rem;
+    }
+
+    .contact-form {
+        padding: 1.2rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .skill-tags {
+        gap: 0.6rem;
+    }
+
+    .skill-tag {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .work-actions {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .work-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .contact-methods {
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-method {
+        font-size: 0.9rem;
+    }
+
+    .social-links {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .social-link {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+}
+
+
+/* Extra small devices (phones in portrait) */
+@media (max-width: 360px) {
+    .hero-title {
+        font-size: 1.6rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+    }
+    
+    .profile-img {
+        width: 220px;
+        height: 280px;
+    }
+    
+    .btn {
+        width: 160px;
+        padding: 7px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .container {
+        padding: 0 8px;
+    }
+    
+    .skill-category,
+    .soft-skill-item,
+    .work-item {
+        padding: 1rem;
+    }
+    
+    .contact-form {
+        padding: 1rem;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding: 2rem 0;
+    }
+    
+    .hero-container {
+        gap: 1.5rem;
+    }
+    
+    .profile-img {
+        width: 200px;
+        height: 250px;
+    }
+    
+    section {
+        padding: 40px 0;
     }
 }
 

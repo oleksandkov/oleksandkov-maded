@@ -2,9 +2,19 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-hamburger.addEventListener('click', () => {
+function toggleMenu() {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
+}
+
+hamburger.addEventListener('click', toggleMenu);
+
+// Add keyboard support for hamburger menu
+hamburger.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleMenu();
+    }
 });
 
 // Close mobile menu when clicking on a link
