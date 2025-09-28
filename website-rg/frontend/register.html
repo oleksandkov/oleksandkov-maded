@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js"></script>
+    <script defer>
+      window.PAGE = "register";
+    </script>
+  </head>
+  <body class="auth-body page-register">
+    <header class="topbar">
+      <h1>Small Company</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="members.html">Members</a>
+        <a href="dashboard.html" id="nav-dashboard" class="hidden">Dashboard</a>
+        <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
+        <a href="register.html" id="nav-register">Register</a>
+        <a href="login.html" id="nav-login">Login</a>
+        <a href="contact.html">Contact Us</a>
+        <button id="btn-logout" class="hidden">Logout</button>
+      </nav>
+    </header>
+
+    <main class="auth-main">
+      <span class="auth-glow auth-glow-one"></span>
+      <span class="auth-glow auth-glow-two"></span>
+      <span class="auth-glow auth-glow-three"></span>
+
+      <div class="auth-wrapper">
+        <section class="auth-card" aria-labelledby="register-heading">
+          <div class="auth-card__header">
+            <span class="auth-chip">Guest access</span>
+            <h2 id="register-heading">Create an account</h2>
+            <p class="auth-subtitle">
+              Join the extended Small Company crew to get curated updates and
+              early previews.
+            </p>
+          </div>
+
+          <form id="register-form" class="auth-form" novalidate>
+            <div class="auth-field">
+              <label for="reg-name">First Name</label>
+              <div class="auth-input">
+                <input
+                  type="text"
+                  id="reg-name"
+                  name="name"
+                  autocomplete="given-name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label for="reg-surname">Last Name</label>
+              <div class="auth-input">
+                <input
+                  type="text"
+                  id="reg-surname"
+                  name="surname"
+                  autocomplete="family-name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label for="reg-email">Email</label>
+              <div class="auth-input">
+                <input
+                  type="email"
+                  id="reg-email"
+                  name="email"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label for="reg-password">Password</label>
+              <div class="auth-input">
+                <input
+                  type="password"
+                  id="reg-password"
+                  name="password"
+                  autocomplete="new-password"
+                  minlength="6"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label for="reg-password-confirm">Confirm Password</label>
+              <div class="auth-input">
+                <input
+                  type="password"
+                  id="reg-password-confirm"
+                  name="password_confirm"
+                  autocomplete="new-password"
+                  minlength="6"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="auth-submit">
+              <span>Create account</span>
+              <svg
+                class="auth-submit__icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M5 12h14m-6-6 6 6-6 6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
+            </button>
+
+            <p id="register-error" class="error auth-error" role="alert"></p>
+
+            <p
+              id="register-success"
+              class="auth-success hidden"
+              role="status"
+              aria-live="polite"
+            ></p>
+
+            <button
+              type="button"
+              id="register-resend"
+              class="auth-link-button hidden"
+              aria-live="polite"
+            >
+              Resend verification email
+            </button>
+
+            <p class="form-hint auth-hint">
+              Already have an account?
+              <a href="login.html" class="auth-link">Log in here.</a>
+            </p>
+          </form>
+        </section>
+
+        <aside class="auth-illustration" aria-label="Guest account benefits">
+          <div class="auth-illustration__badge">Why join?</div>
+          <h3>Be the first to explore what’s next</h3>
+          <p>
+            Unlock private previews, early prototypes, and curated updates from
+            our delivery teams.
+          </p>
+          <ul class="auth-feature-list">
+            <li>
+              <span class="auth-feature-icon" aria-hidden="true">🌟</span>
+              <div>
+                <strong>Exclusive releases</strong>
+                <p>Peek behind the curtain before projects become public.</p>
+              </div>
+            </li>
+            <li>
+              <span class="auth-feature-icon" aria-hidden="true">📬</span>
+              <div>
+                <strong>Curated insights</strong>
+                <p>
+                  Receive quarterly roundups and lessons learned from our
+                  squads.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span class="auth-feature-icon" aria-hidden="true">🎯</span>
+              <div>
+                <strong>Personalized picks</strong>
+                <p>
+                  Select topics you care about and get tailored recommendations.
+                </p>
+              </div>
+            </li>
+          </ul>
+          <div class="auth-stats">
+            <div>
+              <span class="auth-stat-number">4.9★</span>
+              <span class="auth-stat-label">Guest satisfaction</span>
+            </div>
+            <div>
+              <span class="auth-stat-number">2k+</span>
+              <span class="auth-stat-label">Community members</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> Small Company</span>
+      <span aria-hidden="true">•</span>
+      <a
+        class="footer-link"
+        href="https://github.com/oleksandkov/oleksandkov-maded"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open the Small Company GitHub repository"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            fill="currentColor"
+            d="M12 .5a11.5 11.5 0 0 0-3.64 22.4c.57.1.78-.24.78-.55v-2.02c-3.18.69-3.85-1.53-3.85-1.53-.52-1.31-1.27-1.66-1.27-1.66-1.04-.72.08-.71.08-.71 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.67 1.25 3.32.96.1-.74.4-1.25.73-1.54-2.54-.29-5.2-1.27-5.2-5.64 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.17a10.9 10.9 0 0 1 5.74 0c2.18-1.48 3.14-1.17 3.14-1.17.62 1.58.23 2.75.12 3.04.73.8 1.18 1.82 1.18 3.07 0 4.39-2.67 5.35-5.22 5.63.41.35.78 1.04.78 2.1v3.11c0 .31.21.66.79.55A11.5 11.5 0 0 0 12 .5Z"
+          ></path>
+        </svg>
+        <span>GitHub</span>
+      </a>
+    </footer>
+
+    <div id="notification-container" class="notification-container"></div>
+  </body>
+</html>

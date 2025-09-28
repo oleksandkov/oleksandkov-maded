@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Company Site</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js"></script>
+    <script defer>
+      window.PAGE = "home";
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Small Company</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="members.html">Members</a>
+        <a href="dashboard.html" id="nav-dashboard" class="hidden">Dashboard</a>
+        <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
+        <a href="register.html" id="nav-register">Register</a>
+        <a href="login.html" id="nav-login">Login</a>
+        <a href="contact.html">Contact Us</a>
+        <button id="btn-logout" class="hidden">Logout</button>
+      </nav>
+    </header>
+
+    <!-- Hero Section with Parallax -->
+    <section class="hero-parallax">
+      <div class="hero-content">
+        <h2 class="org-name">Small Company</h2>
+      </div>
+    </section>
+
+    <main class="container">
+      <section>
+        <h2>Welcome</h2>
+        <p>
+          This site supports member and admin access. Browse public projects, or
+          login for more.
+        </p>
+      </section>
+      <section id="about-us" class="about-us">
+        <div class="about-us-header">
+          <span class="section-badge">Our Collective</span>
+          <h2>About Us</h2>
+          <p class="about-us-intro">
+            We are a multidisciplinary team of builders, analysts, and mentors
+            who love turning bold ideas into polished experiences. From the
+            first brainstorming sketch to the final deployment, we stay curious,
+            share knowledge generously, and keep people at the center of every
+            decision.
+          </p>
+        </div>
+        <div class="about-us-grid">
+          <article class="about-card">
+            <div class="card-icon" aria-hidden="true">🎯</div>
+            <h3>Mission</h3>
+            <p>
+              Empower learners and partners with practical tools, transparent
+              processes, and mentorship that sparks long-term growth.
+            </p>
+          </article>
+          <article class="about-card">
+            <div class="card-icon" aria-hidden="true">🤝</div>
+            <h3>Culture</h3>
+            <p>
+              We foster open collaboration and celebrate diverse voices. Weekly
+              stand-ups keep everyone aligned, while demo days showcase wins and
+              lessons learned.
+            </p>
+          </article>
+          <article class="about-card">
+            <div class="card-icon" aria-hidden="true">🚀</div>
+            <h3>Focus</h3>
+            <p>
+              Our projects span data storytelling, web engineering, and
+              community education. Each initiative blends research, design, and
+              hands-on experimentation.
+            </p>
+          </article>
+        </div>
+        <div class="about-us-highlights">
+          <div class="about-highlight">
+            <h4>Weekly Learning Labs</h4>
+            <p>
+              Interactive sessions where teammates workshop new tech, build
+              prototypes, and give live feedback.
+            </p>
+          </div>
+          <div class="about-highlight">
+            <h4>Open Resource Library</h4>
+            <p>
+              Curated templates, starter kits, and playbooks maintained by the
+              group to help newcomers ramp up quickly.
+            </p>
+          </div>
+          <div class="about-highlight">
+            <h4>Mentorship Network</h4>
+            <p>
+              A rotating roster of mentors pairs with members to set goals,
+              review progress, and unlock new opportunities.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="public-overview public-overview--compact">
+        <h2>Public View</h2>
+        <p>
+          Explore our open portfolio and meet the people behind the work. The
+          Members area highlights detailed bios, focus areas, and contact points
+          for every core team lead.
+        </p>
+        <a class="btn-primary" href="members.html">Meet the team</a>
+      </section>
+      <section>
+        <h2>Latest Projects</h2>
+        <div id="projects" class="projects"></div>
+      </section>
+      <section>
+        <h2>Members</h2>
+        <p class="section-lead">
+          Meet the people who keep our delivery sharp and our clients smiling.
+        </p>
+        <div id="members" class="members-grid"></div>
+      </section>
+      <section>
+        <h2>Documents</h2>
+        <div id="documents" class="documents-list"></div>
+      </section>
+      <section id="contact-us" class="contact-us">
+        <div class="contact-us-header">
+          <span class="section-badge">Stay Connected</span>
+          <h2>Contact Us</h2>
+          <p>
+            Have a question, collaboration idea, or press inquiry? Reach out to
+            the right channel and our team will follow up within one business
+            day.
+          </p>
+        </div>
+        <div class="contact-us-grid">
+          <article class="contact-card">
+            <div class="contact-icon" aria-hidden="true">✉️</div>
+            <h3>Email</h3>
+            <p>General inquiries, partnerships, and speaking invitations.</p>
+            <a class="contact-link" href="mailto:hello@smallcompany.org"
+              >hello@smallcompany.org</a
+            >
+          </article>
+          <article class="contact-card">
+            <div class="contact-icon" aria-hidden="true">🧑‍�</div>
+            <h3>GitHub</h3>
+            <p>
+              Explore our repositories, contribute code, and follow project
+              updates.
+            </p>
+            <a
+              class="contact-link"
+              href="https://github.com/smallcompany"
+              target="_blank"
+              rel="noopener"
+              >github.com/smallcompany</a
+            >
+          </article>
+          <article class="contact-card">
+            <div class="contact-icon" aria-hidden="true">�</div>
+            <h3>LinkedIn</h3>
+            <p>
+              Connect with the team, stay informed about events, and grow
+              together.
+            </p>
+            <a
+              class="contact-link"
+              href="https://linkedin.com/company/smallcompany"
+              target="_blank"
+              rel="noopener"
+              >linkedin.com/company/smallcompany</a
+            >
+          </article>
+        </div>
+        <div class="contact-cta">
+          <a class="btn-primary" href="contact.html">Start a Conversation</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> Small Company</span>
+      <span aria-hidden="true">•</span>
+      <a
+        class="footer-link"
+        href="https://github.com/oleksandkov/oleksandkov-maded"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open the Small Company GitHub repository"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            fill="currentColor"
+            d="M12 .5a11.5 11.5 0 0 0-3.64 22.4c.57.1.78-.24.78-.55v-2.02c-3.18.69-3.85-1.53-3.85-1.53-.52-1.31-1.27-1.66-1.27-1.66-1.04-.72.08-.71.08-.71 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.67 1.25 3.32.96.1-.74.4-1.25.73-1.54-2.54-.29-5.2-1.27-5.2-5.64 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.17a10.9 10.9 0 0 1 5.74 0c2.18-1.48 3.14-1.17 3.14-1.17.62 1.58.23 2.75.12 3.04.73.8 1.18 1.82 1.18 3.07 0 4.39-2.67 5.35-5.22 5.63.41.35.78 1.04.78 2.1v3.11c0 .31.21.66.79.55A11.5 11.5 0 0 0 12 .5Z"
+          ></path>
+        </svg>
+        <span>GitHub</span>
+      </a>
+    </footer>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+Here are smaller, focused prompts for each of your tasks to improve productivity:
+
+---
+
+**1. Move "podcasts" visibility to guest view mode from admin view mode in Dashboard**
+
+- Update the dashboard so that the "podcasts" section is visible to guests, not just admins.
+
+---
+
+**2. Show the latest action (article or podcast) at the top of the dashboard**
+
+- Modify the dashboard to display the most recent article or podcast at the very top.
+
+---
+
+**3. Fix file upload for articles (check logic and compare with admin page)**
+
+- Review and fix the file upload logic for articles, ensuring it works as it does on the admin page.
+
+---
+
+**4. Remove the empty white bar for guest users on the dashboard page**
+
+- Remove any empty white bar that appears for guest users on the dashboard.
+
+---
+
+**5. Add "What we can do" section on the home page for all users**
+
+- Add a "What we can do" section to the homepage, visible to all users.
+
+---
+
+**6. Add notification toggle button at the bottom of the webpage (only for registered users)**
+
+- Add a button at the bottom of the page for registered users to turn notifications on or off.
+
+---
+
+**7. Add "Notify" button for each article or podcast (one-time use, then changes to "Notified", sends notification to opted-in users)**
+
+- For each article or podcast, add a "Notify" button (one-time use, changes to "Notified" after use) that sends notifications to all registered users who opted in.
+
+---
+
+Let me know which task you want to start with!
+
+do that when I click on the select notification botton the window appeard that tells (ask you whether you want to get new notifiactions about new articles), also do that on the top of the dashboard (for guests and for guest view) will be the latest article or podcast
+
+instead of "add podcast" change it to the "save changes"
+
+do the same to dashboard editotr in a guest view mode (means do that changes saves only when click on the save button). Also do the buttons like: dowload image, doc, audio that it has a white text on icons. In edit mode do

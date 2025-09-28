@@ -80,7 +80,8 @@ node_modules/
 !*index.html
 !*script.js
 !*styles.css
-!website/**
+!website/**\
+!website-rg/**
 # Presentation files #
 !presentations/qmd/images/**
 !presentations/qmd/Docker.pdf

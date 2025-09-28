@@ -72,12 +72,86 @@
                 <div class="hero-buttons">
                     <a href="#projects" class="btn btn-primary">View My Work</a>
                     <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    <a href="#audio" class="btn btn-primary">🎧 Audio / Podcasts</a>
                 </div>
             </div>
             <div class="hero-image">
                 <div class="profile-card">
                     <img src="Images/body.jpg" alt="My Photo" class="profile-img">
                 </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Audio/Podcasts Section -->
+    <section id="audio" class="audio-section">
+        <div class="container">
+            <h2 class="section-title">Audio / Podcasts</h2>
+            <div class="audio-grid">
+                <div class="audio-card">
+                    <div class="audio-info">
+                        <h3>About Me</h3>
+                        <p>A short introduction about myself, my background, and my journey in tech and data science.</p>
+                    </div>
+                        <div class="audio-controls">
+                            <audio id="audio1" src="audio/aboutme.mp3"></audio>
+                            <div class="audio-meta">
+                                <span class="audio-time" id="audio1-time">00:00 / 00:00</span>
+                            </div>
+                            <div class="audio-btn-group">
+                                <button class="audio-btn rewind" data-audio="audio1"><i class="fas fa-backward"></i></button>
+                                <button class="audio-btn play" data-audio="audio1"><i class="fas fa-play"></i></button>
+                                <button class="audio-btn pause" data-audio="audio1"><i class="fas fa-pause"></i></button>
+                                <button class="audio-btn stop" data-audio="audio1"><i class="fas fa-stop"></i></button>
+                                <button class="audio-btn forward" data-audio="audio1"><i class="fas fa-forward"></i></button>
+                                <label for="audio1-volume" class="audio-volume-label">Volume</label>
+                                <input id="audio1-volume" type="range" min="0" max="1" step="0.01" value="1" class="audio-volume" data-audio="audio1">
+                            </div>
+                        </div>
+                </div>
+                <!-- <div class="audio-card">
+                    <div class="audio-info">
+                        <h3>Podcast #1</h3>
+                        <p>First episode: discussing the latest trends in AI, data analytics, and my experience with new technologies.</p>
+                    </div>
+                        <div class="audio-controls">
+                            <audio id="audio2" src="Images/podcast-1.mp3"></audio>
+                            <div class="audio-meta">
+                                <span class="audio-time" id="audio2-time">00:00 / 00:00</span>
+                            </div>
+                            <div class="audio-btn-group">
+                                <button class="audio-btn rewind" data-audio="audio2"><i class="fas fa-backward"></i></button>
+                                <button class="audio-btn play" data-audio="audio2"><i class="fas fa-play"></i></button>
+                                <button class="audio-btn pause" data-audio="audio2"><i class="fas fa-pause"></i></button>
+                                <button class="audio-btn stop" data-audio="audio2"><i class="fas fa-stop"></i></button>
+                                <button class="audio-btn forward" data-audio="audio2"><i class="fas fa-forward"></i></button>
+                                <label for="audio2-volume" class="audio-volume-label">Volume</label>
+                                <input id="audio2-volume" type="range" min="0" max="1" step="0.01" value="1" class="audio-volume" data-audio="audio2">
+                            </div>
+                        </div>
+                </div> -->
+                <!-- <div class="audio-card">
+                    <div class="audio-info">
+                        <h3>Podcast #2</h3>
+                        <p>Second episode: sharing insights on learning programming, university life, and personal growth tips.</p>
+                    </div>
+                        <div class="audio-controls">
+                            <audio id="audio3" src="Images/podcast-2.mp3"></audio>
+                            <div class="audio-meta">
+                                <span class="audio-time" id="audio3-time">00:00 / 00:00</span>
+                            </div>
+                            <div class="audio-btn-group">
+                                <button class="audio-btn rewind" data-audio="audio3"><i class="fas fa-backward"></i></button>
+                                <button class="audio-btn play" data-audio="audio3"><i class="fas fa-play"></i></button>
+                                <button class="audio-btn pause" data-audio="audio3"><i class="fas fa-pause"></i></button>
+                                <button class="audio-btn stop" data-audio="audio3"><i class="fas fa-stop"></i></button>
+                                <button class="audio-btn forward" data-audio="audio3"><i class="fas fa-forward"></i></button>
+                                <label for="audio3-volume" class="audio-volume-label">Volume</label>
+                                <input id="audio3-volume" type="range" min="0" max="1" step="0.01" value="1" class="audio-volume" data-audio="audio3">
+                            </div>
+                        </div>
+                </div> -->
             </div>
         </div>
     </section>
@@ -460,6 +534,16 @@
         </div>
     </section>
 
+    <!-- Social Panel Above Footer -->
+    <div class="footer-social-panel">
+        <div class="container">
+            <div class="footer-social-links">
+                <a href="https://github.com/oleksandkov" class="footer-social-link" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/oleksandr-koval-932015384/" class="footer-social-link" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.instagram.com/koval.dm88?igsh=bWVnZzIxbzJrNGly" class="footer-social-link" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
