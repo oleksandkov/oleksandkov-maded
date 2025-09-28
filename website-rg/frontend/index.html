@@ -5,45 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Company Site</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="images/rg-favicon.svg" type="image/svg+xml" />
     <script defer src="app.js"></script>
     <script defer>
       window.PAGE = "home";
     </script>
   </head>
   <body>
-    <header class="topbar">
-      <h1>Small Company</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="members.html">Members</a>
-        <a href="dashboard.html" id="nav-dashboard" class="hidden">Dashboard</a>
-        <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
-        <a href="register.html" id="nav-register">Register</a>
-        <a href="login.html" id="nav-login">Login</a>
-        <a href="contact.html">Contact Us</a>
-        <button id="btn-logout" class="hidden">Logout</button>
-      </nav>
-    </header>
-
-    <!-- Hero Section with Parallax -->
     <section class="hero-parallax">
-      <div class="hero-content">
-        <h2 class="org-name">Small Company</h2>
+      <div class="hero-parallax__inner">
+        <header class="topbar topbar--hero">
+          <h1>Small Company</h1>
+          <nav>
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="members.html">Members</a>
+            <a href="dashboard.html" id="nav-dashboard" class="hidden"
+              >Dashboard</a
+            >
+            <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
+            <a href="register.html" id="nav-register">Register</a>
+            <a href="login.html" id="nav-login">Login</a>
+            <a href="contact.html">Contact Us</a>
+            <button id="btn-logout" class="hidden">Logout</button>
+          </nav>
+        </header>
+        <div class="hero-content">
+          <h2 class="org-name">Small Company</h2>
+          <p class="hero-subtitle">
+            We design and launch thoughtful products with teams that care about
+            craft, clarity, and community impact.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="projects.html">See our work</a>
+            <a class="btn-secondary" href="contact.html">Talk with us</a>
+          </div>
+        </div>
       </div>
     </section>
 
     <main class="container">
-      <section>
-        <h2>Welcome</h2>
-        <p>
-          This site supports member and admin access. Browse public projects, or
-          login for more.
-        </p>
+      <section class="welcome-section">
+        <div class="welcome-section__content">
+          <h2>Welcome to Small Company</h2>
+          <p>
+            We're a collaborative studio of builders, researchers, and mentors
+            crafting human-centered products. Peek into our work, meet the
+            people behind it, and see how we can support your next initiative.
+          </p>
+          <div class="welcome-section__actions">
+            <a class="btn-primary" href="projects.html">Explore projects</a>
+            <a class="btn-secondary" href="members.html">Meet our team</a>
+          </div>
+        </div>
+        <div
+          class="welcome-section__highlights"
+          aria-label="What you'll find here"
+        >
+          <article class="welcome-highlight">
+            <h3>Curated playbooks</h3>
+            <p>
+              Reusable templates, guides, and tooling to accelerate delivery.
+            </p>
+          </article>
+          <article class="welcome-highlight">
+            <h3>Transparent workflow</h3>
+            <p>
+              Follow our pipeline from idea to launch with clear milestones.
+            </p>
+          </article>
+          <article class="welcome-highlight">
+            <h3>Community support</h3>
+            <p>
+              Office hours, workshops, and mentorship designed for real teams.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section id="what-we-can-do" class="what-we-can-do">
+        <div class="what-we-can-do__header">
+          <h2>What we can do</h2>
+          <p>
+            From planning to launch, we help teams ship polished digital
+            experiences. Explore a few ways we partner with organizations.
+          </p>
+        </div>
+        <div class="what-we-can-do__grid">
+          <article class="capability-card">
+            <div class="card-icon" aria-hidden="true">📊</div>
+            <h3>Insightful Dashboards</h3>
+            <p>
+              We turn complex datasets into clear stories with interactive
+              dashboards, automated reports, and stakeholder-ready visuals.
+            </p>
+            <ul>
+              <li>Analytics audits and data modeling</li>
+              <li>Interactive dashboards in modern BI tools</li>
+              <li>Training sessions for internal teams</li>
+            </ul>
+          </article>
+          <article class="capability-card">
+            <div class="card-icon" aria-hidden="true">🛠️</div>
+            <h3>Rapid Prototyping</h3>
+            <p>
+              Designers and engineers co-create clickable prototypes, proof of
+              concepts, and MVPs that gather feedback fast.
+            </p>
+            <ul>
+              <li>User journey mapping and UX flows</li>
+              <li>Accessible component libraries</li>
+              <li>Deployment-ready starter kits</li>
+            </ul>
+          </article>
+          <article class="capability-card">
+            <div class="card-icon" aria-hidden="true">🤖</div>
+            <h3>Automation & Enablement</h3>
+            <p>
+              We streamline workflows with secure integrations, notification
+              systems, and knowledge resources your teams can own.
+            </p>
+            <ul>
+              <li>Custom middleware and API wiring</li>
+              <li>Alerting, logging, and operations playbooks</li>
+              <li>Onboarding guides and enablement training</li>
+            </ul>
+          </article>
+        </div>
       </section>
       <section id="about-us" class="about-us">
         <div class="about-us-header">
-          <span class="section-badge">Our Collective</span>
           <h2>About Us</h2>
           <p class="about-us-intro">
             We are a multidisciplinary team of builders, analysts, and mentors

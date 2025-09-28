@@ -727,21 +727,28 @@ router.patch("/me/notifications", async (req, res) => {
       updated_at: new Date(),
     };
 
-    const result = await collection.findOneAndUpdate(
+    const updateResult = await collection.findOneAndUpdate(
       { _id: userId },
       { $set: update },
       { returnDocument: "after", projection: { password_hash: 0 } }
     );
 
-    if (!result.value) {
+    const updatedDocument =
+      updateResult && typeof updateResult === "object"
+        ? Object.prototype.hasOwnProperty.call(updateResult, "value")
+          ? updateResult.value
+          : updateResult
+        : null;
+
+    if (!updatedDocument) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const permissions = normalizePermissions(result.value.permissions || []);
+    const permissions = normalizePermissions(updatedDocument.permissions || []);
 
     res.json({
       success: true,
-      notification_opt_in: result.value.notification_opt_in === true,
+      notification_opt_in: updatedDocument.notification_opt_in === true,
       permissions,
     });
   } catch (err) {

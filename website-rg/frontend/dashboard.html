@@ -5,30 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="images/rg-favicon.svg" type="image/svg+xml" />
     <script defer src="app.js"></script>
     <script defer>
       window.PAGE = "dashboard";
     </script>
   </head>
   <body>
-    <header class="topbar">
-      <h1>Small Company</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="members.html">Members</a>
-        <a href="dashboard.html" id="nav-dashboard" class="hidden">Dashboard</a>
-        <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
-        <a href="register.html" id="nav-register">Register</a>
-        <a href="login.html" id="nav-login">Login</a>
-        <a href="contact.html">Contact Us</a>
-        <button id="btn-logout" class="hidden">Logout</button>
-      </nav>
-    </header>
+    <section class="hero-parallax" aria-label="RG-FIDES dashboard overview">
+      <div class="hero-parallax__inner">
+        <header class="topbar topbar--hero">
+          <h1>Small Company</h1>
+          <nav>
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="members.html">Members</a>
+            <a
+              href="dashboard.html"
+              id="nav-dashboard"
+              class="hidden"
+              aria-current="page"
+              >Dashboard</a
+            >
+            <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
+            <a href="register.html" id="nav-register">Register</a>
+            <a href="login.html" id="nav-login">Login</a>
+            <a href="contact.html">Contact Us</a>
+            <button id="btn-logout" class="hidden">Logout</button>
+          </nav>
+        </header>
+        <div class="hero-content">
+          <h2 class="org-name">RG-FIDES Control Center</h2>
+          <p class="hero-subtitle">
+            Track launches, manage editorial content, and sync partner handoffs
+            in one real-time workspace.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#dashboard-main">Jump into updates</a>
+            <a
+              id="dashboard-admin-cta"
+              class="btn-secondary hidden"
+              href="admin.html"
+            >
+              Open admin tools
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
     <main class="container dashboard-layout">
-      <section class="dashboard-main">
-        <h2>Your Dashboard</h2>
-        <p id="welcome"></p>
+      <section id="dashboard-main" class="dashboard-main">
+        <p id="welcome" class="hidden" aria-hidden="true"></p>
         <div
           id="dashboard-guest-message"
           class="dashboard-guest-message hidden"
@@ -85,6 +112,7 @@
             <form
               id="dashboard-article-form"
               class="guest-article-form dashboard-admin-form hidden"
+              autocomplete="off"
             >
               <div class="form-field">
                 <label for="dashboard-article-title">Title</label>
@@ -220,12 +248,22 @@
                   class="article-audio-form-list"
                 ></div>
               </div>
-              <div class="dashboard-article-editor-block">
-                <div
-                  id="dashboard-podcasts-admin-anchor"
-                  class="dashboard-podcasts-admin-anchor"
-                ></div>
+              <div class="guest-article-form-actions">
+                <button type="submit" class="button-primary">
+                  Publish article
+                </button>
+                <button
+                  type="button"
+                  id="dashboard-article-cancel"
+                  class="button-secondary"
+                >
+                  Cancel
+                </button>
               </div>
+              <div
+                id="dashboard-podcasts-admin-anchor"
+                class="dashboard-podcasts-admin-anchor"
+              ></div>
             </form>
             <div
               class="dashboard-editor-scroll"
@@ -635,7 +673,7 @@
                 id="guest-article-save-button"
                 class="button-primary hidden"
               >
-                Save changes
+                Save article changes
               </button>
             </div>
           </div>
@@ -733,6 +771,82 @@
           </a>
         </div>
       </figure>
+    </div>
+    <div
+      class="modal notification-modal"
+      id="notification-optin-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="notification-optin-title"
+      aria-hidden="true"
+    >
+      <div class="modal__backdrop" data-action="close-modal"></div>
+      <div class="modal__dialog" role="document">
+        <header class="modal__header">
+          <h2 id="notification-optin-title">Enable content alerts</h2>
+          <button
+            type="button"
+            class="modal__close"
+            data-action="close-modal"
+            aria-label="Close notification preferences"
+          >
+            ×
+          </button>
+        </header>
+        <div class="modal__body">
+          <p>
+            Stay in the loop when new guest articles or podcast episodes are
+            published. You can switch this off anytime from the footer toggle.
+          </p>
+          <form class="modal__form" id="notification-optin-form">
+            <fieldset>
+              <legend class="sr-only">Notification destinations</legend>
+              <div class="form-field">
+                <label for="notification-optin-email">Delivery email</label>
+                <input
+                  type="email"
+                  id="notification-optin-email"
+                  name="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+                <p class="form-hint">
+                  We'll send updates to this address when new content goes live.
+                </p>
+              </div>
+              <div class="form-field">
+                <label class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="notification-optin-verification"
+                    name="verified"
+                  />
+                  <span
+                    >I'm a verified team member (skip guest confirmation)</span
+                  >
+                </label>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <footer class="modal__footer">
+          <button
+            type="button"
+            class="button-secondary"
+            data-action="close-modal"
+          >
+            Not now
+          </button>
+          <button
+            type="submit"
+            form="notification-optin-form"
+            class="button-primary"
+          >
+            Enable notifications
+          </button>
+        </footer>
+      </div>
     </div>
   </body>
 </html>

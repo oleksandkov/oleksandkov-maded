@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Analytics growth illustration</title>
+  <desc id="desc">Minimal illustration of rising bars with a connected data line on a blue gradient background.</desc>
+  <defs>
+    <linearGradient id="background" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e3f2ff" />
+      <stop offset="100%" stop-color="#97bbdd" />
+    </linearGradient>
+    <linearGradient id="bar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b0dfff" />
+      <stop offset="100%" stop-color="#5cabd1" />
+    </linearGradient>
+    <linearGradient id="barAlt" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#d0e4f3" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)" />
+  <g opacity="0.45">
+    <circle cx="420" cy="220" r="160" fill="#fff" />
+    <circle cx="1180" cy="120" r="200" fill="#fff" />
+    <circle cx="1400" cy="400" r="140" fill="#dceeff" />
+  </g>
+  <g transform="translate(180 140)">
+    <rect x="80" y="390" width="120" height="280" rx="24" fill="url(#barAlt)" />
+    <rect x="280" y="340" width="140" height="330" rx="24" fill="url(#bar)" />
+    <rect x="520" y="270" width="140" height="400" rx="24" fill="url(#barAlt)" />
+    <rect x="760" y="220" width="140" height="450" rx="24" fill="url(#bar)" />
+    <rect x="1000" y="140" width="160" height="530" rx="26" fill="url(#barAlt)" />
+  </g>
+  <g stroke="#6fc8ff" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M260 600 C 360 500 420 420 530 430 C 640 440 700 340 820 360 C 940 380 990 240 1140 260 C 1290 280 1350 140 1440 170" />
+  </g>
+  <g fill="#ffffff" stroke="#6fc8ff" stroke-width="12">
+    <circle cx="260" cy="600" r="26" />
+    <circle cx="420" cy="420" r="26" />
+    <circle cx="580" cy="430" r="26" />
+    <circle cx="820" cy="360" r="26" />
+    <circle cx="990" cy="240" r="26" />
+    <circle cx="1140" cy="260" r="26" />
+    <circle cx="1350" cy="140" r="26" />
+    <circle cx="1440" cy="170" r="26" />
+  </g>
+</svg>

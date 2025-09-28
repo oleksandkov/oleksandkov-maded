@@ -5,28 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="images/rg-favicon.svg" type="image/svg+xml" />
     <script defer src="app.js"></script>
     <script defer>
       window.PAGE = "admin";
     </script>
   </head>
   <body>
-    <header class="topbar">
-      <h1>Small Company</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="members.html">Members</a>
-        <a href="dashboard.html" id="nav-dashboard" class="hidden">Dashboard</a>
-        <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
-        <a href="register.html" id="nav-register">Register</a>
-        <a href="login.html" id="nav-login">Login</a>
-        <a href="contact.html">Contact Us</a>
-        <button id="btn-logout" class="hidden">Logout</button>
-      </nav>
-    </header>
+    <section class="hero-parallax" aria-label="RG-FIDES admin workspace">
+      <div class="hero-parallax__inner">
+        <header class="topbar topbar--hero">
+          <h1>Small Company</h1>
+          <nav>
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="members.html">Members</a>
+            <a href="dashboard.html" id="nav-dashboard" class="hidden"
+              >Dashboard</a
+            >
+            <a
+              href="admin.html"
+              id="nav-admin"
+              class="hidden"
+              aria-current="page"
+              >Admin</a
+            >
+            <a href="register.html" id="nav-register">Register</a>
+            <a href="login.html" id="nav-login">Login</a>
+            <a href="contact.html">Contact Us</a>
+            <button id="btn-logout" class="hidden">Logout</button>
+          </nav>
+        </header>
+        <div class="hero-content">
+          <h2 class="org-name">RG-FIDES Admin Workspace</h2>
+          <p class="hero-subtitle">
+            Publish updates, seed events, and curate the project catalog for
+            everyone relying on the dashboard.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#admin-tools">Manage content</a>
+            <a class="btn-secondary" href="dashboard.html">View dashboard</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <main class="container">
+    <main id="admin-tools" class="container">
       <h2>Admin Panel</h2>
       <div class="admin-section">
         <h3>Create Project</h3>

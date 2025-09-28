@@ -265,6 +265,134 @@ const TEAM_MEMBERS = [
   },
 ];
 
+function formatNotificationTooltip(state, title) {
+  const normalized = normalizeNotificationState(state);
+  if (!normalized.sent) {
+    return title ? `Send a notification for “${title}”` : "Send a notification";
+  }
+  const sentAt = normalized.sent_at
+    ? formatEventDateTime(normalized.sent_at, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
+    : null;
+  if (title) {
+    return sentAt
+      ? `Notification sent for “${title}” on ${sentAt}`
+      : `Notification already sent for “${title}”`;
+  }
+  return sentAt
+    ? `Notification sent on ${sentAt}`
+    : "Notification already sent";
+}
+
+function renderArticleNotificationAction(article) {
+  if (!CAN_MANAGE_ARTICLES || !article || article.pendingAction) return "";
+  const state = normalizeNotificationState(article.notification_state);
+  const sent = state.sent;
+  const classes = ["icon-button", "icon-button-notify"];
+  if (sent) {
+    classes.push("icon-button-notify--sent");
+  }
+  const tooltip = formatNotificationTooltip(state, article.title || "");
+  const label = sent ? "Notified" : "Notify";
+  const icon = sent ? "✅" : "📣";
+  const disabledAttr = sent ? "disabled" : "";
+  return `<button type="button" class="${classes.join(
+    " "
+  )}" data-action="notify-article" data-id="${escapeHtml(
+    article.id
+  )}" aria-label="${escapeHtml(tooltip)}" title="${escapeHtml(
+    tooltip
+  )}" ${disabledAttr}>${icon} ${label}</button>`;
+}
+
+function renderPodcastNotificationAction(podcast) {
+  if (!CAN_MANAGE_ARTICLES || !podcast || podcast.pendingAction) return "";
+  const state = normalizeNotificationState(podcast.notification_state);
+  const sent = state.sent;
+  const classes = ["icon-button", "icon-button-notify"];
+  if (sent) {
+    classes.push("icon-button-notify--sent");
+  }
+  const tooltip = formatNotificationTooltip(state, podcast.title || "");
+  const label = sent ? "Notified" : "Notify";
+  const icon = sent ? "✅" : "📣";
+  const disabledAttr = sent ? "disabled" : "";
+  return `<button type="button" class="${classes.join(
+    " "
+  )}" data-action="notify-podcast" data-id="${escapeHtml(
+    podcast.id
+  )}" aria-label="${escapeHtml(tooltip)}" title="${escapeHtml(
+    tooltip
+  )}" ${disabledAttr}>${icon} ${label}</button>`;
+}
+
+function initializeHeroParallax() {
+  const hero = document.querySelector(".hero-parallax");
+  if (!hero) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (reduceMotion.matches) {
+    hero.style.setProperty("--hero-parallax-offset", "0px");
+    return;
+  }
+
+  let ticking = false;
+
+  const updateParallax = () => {
+    const rect = hero.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const heroTop = rect.top + scrollY;
+    const rawOffset = scrollY - heroTop;
+    const limit = rect.height;
+    const clampedOffset = Math.max(-limit, Math.min(limit, rawOffset));
+    hero.style.setProperty("--hero-parallax-offset", `${clampedOffset}px`);
+    ticking = false;
+  };
+
+  const requestUpdate = () => {
+    if (!ticking) {
+      ticking = true;
+      window.requestAnimationFrame(updateParallax);
+    }
+  };
+
+  requestUpdate();
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+
+  if (typeof reduceMotion.addEventListener === "function") {
+    reduceMotion.addEventListener("change", (event) => {
+      if (event.matches) {
+        hero.style.setProperty("--hero-parallax-offset", "0px");
+        window.removeEventListener("scroll", requestUpdate);
+        window.removeEventListener("resize", requestUpdate);
+      } else {
+        window.removeEventListener("scroll", requestUpdate);
+        window.removeEventListener("resize", requestUpdate);
+        requestUpdate();
+        window.addEventListener("scroll", requestUpdate, { passive: true });
+        window.addEventListener("resize", requestUpdate);
+      }
+    });
+  } else if (typeof reduceMotion.addListener === "function") {
+    reduceMotion.addListener((event) => {
+      if (event.matches) {
+        hero.style.setProperty("--hero-parallax-offset", "0px");
+        window.removeEventListener("scroll", requestUpdate);
+        window.removeEventListener("resize", requestUpdate);
+      } else {
+        window.removeEventListener("scroll", requestUpdate);
+        window.removeEventListener("resize", requestUpdate);
+        requestUpdate();
+        window.addEventListener("scroll", requestUpdate, { passive: true });
+        window.addEventListener("resize", requestUpdate);
+      }
+    });
+  }
+}
+
 const PROJECT_STATUS_OPTIONS = [
   { value: "active", label: "Active" },
   { value: "completed", label: "Completed" },
@@ -332,6 +460,15 @@ function getPendingChangeStore(entity) {
   return DASHBOARD_PENDING_CHANGES[entity] || null;
 }
 
+function getPendingChangeCount(entity) {
+  const store = getPendingChangeStore(entity);
+  return store ? store.size : 0;
+}
+
+function hasPendingChangesFor(entity) {
+  return getPendingChangeCount(entity) > 0;
+}
+
 function hasPendingDashboardChanges() {
   return Object.values(DASHBOARD_PENDING_CHANGES).some(
     (store) => store && store.size > 0
@@ -377,25 +514,25 @@ function updateGuestSaveButtonsState() {
   const articleButton = document.getElementById("guest-article-save-button");
   if (articleButton) {
     const busy = articleButton.dataset.busy === "true";
-    const canSave =
-      canManageGuest && guestArticleEditMode && dashboardHasPendingChanges;
-    articleButton.disabled = !canSave || busy;
-    articleButton.setAttribute(
-      "aria-disabled",
-      !canSave || busy ? "true" : "false"
-    );
+    const articleChanges = hasPendingChangesFor("articles");
+    const shouldShow =
+      canManageGuest && (guestArticleEditMode || articleChanges);
+    articleButton.classList.toggle("hidden", !shouldShow);
+    const canSave = canManageGuest && articleChanges && !busy;
+    articleButton.disabled = !canSave;
+    articleButton.setAttribute("aria-disabled", !canSave ? "true" : "false");
   }
 
   const podcastButton = document.getElementById("guest-podcast-save-button");
   if (podcastButton) {
     const busy = podcastButton.dataset.busy === "true";
-    const canSave =
-      canManageGuest && guestPodcastEditMode && dashboardHasPendingChanges;
-    podcastButton.disabled = !canSave || busy;
-    podcastButton.setAttribute(
-      "aria-disabled",
-      !canSave || busy ? "true" : "false"
-    );
+    const podcastChanges = hasPendingChangesFor("podcasts");
+    const shouldShow =
+      canManageGuest && (guestPodcastEditMode || podcastChanges);
+    podcastButton.classList.toggle("hidden", !shouldShow);
+    const canSave = canManageGuest && podcastChanges && !busy;
+    podcastButton.disabled = !canSave;
+    podcastButton.setAttribute("aria-disabled", !canSave ? "true" : "false");
   }
 }
 
@@ -503,6 +640,7 @@ function renderAdminArticleCard(article) {
   const pendingBadge = renderPendingBadge(article.pendingAction);
   const actionsMarkup = CAN_MANAGE_ARTICLES
     ? `<div class="dashboard-article-actions">
+        ${renderArticleNotificationAction(article)}
         <button type="button" class="icon-button" data-action="edit-article" data-id="${escapeHtml(
           article.id
         )}">Edit</button>
@@ -650,7 +788,15 @@ function collectPendingDashboardOperations() {
 }
 
 const NOTIFICATION_PREFERENCE_KEY = "notifications.preference";
+const NOTIFICATION_CONTACT_KEY = "notifications.contact";
+const NOTIFICATION_VERIFIED_KEY = "notifications.contact.verified";
+
 let notificationsEnabled = getStoredNotificationPreference();
+let notificationModalResolver = null;
+let notificationModalLastFocus = null;
+let notificationModalOptions = null;
+let notificationModalElements = null;
+let notificationModalKeydownBound = false;
 
 function applyNotificationPreferenceToDom() {
   if (typeof document === "undefined" || !document.body) return;
@@ -693,6 +839,49 @@ function getStoredNotificationPreference() {
   return true;
 }
 
+function getStoredNotificationContact() {
+  try {
+    const stored = localStorage.getItem(NOTIFICATION_CONTACT_KEY);
+    return stored ? stored.trim() : "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function persistNotificationContact(email) {
+  try {
+    const value = email ? String(email).trim() : "";
+    if (value) {
+      localStorage.setItem(NOTIFICATION_CONTACT_KEY, value);
+    } else {
+      localStorage.removeItem(NOTIFICATION_CONTACT_KEY);
+    }
+  } catch (error) {
+    // Ignore persistence issues silently.
+  }
+}
+
+function getStoredNotificationVerification() {
+  try {
+    const stored = localStorage.getItem(NOTIFICATION_VERIFIED_KEY);
+    return stored === "true";
+  } catch (error) {
+    return false;
+  }
+}
+
+function persistNotificationVerification(enabled) {
+  try {
+    if (enabled) {
+      localStorage.setItem(NOTIFICATION_VERIFIED_KEY, "true");
+    } else {
+      localStorage.removeItem(NOTIFICATION_VERIFIED_KEY);
+    }
+  } catch (error) {
+    // Ignore persistence issues silently.
+  }
+}
+
 function persistNotificationPreference(enabled) {
   try {
     localStorage.setItem(NOTIFICATION_PREFERENCE_KEY, enabled ? "on" : "off");
@@ -721,8 +910,634 @@ function setNotificationsEnabled(nextEnabled, options = {}) {
   }
 }
 
-function toggleNotifications() {
-  setNotificationsEnabled(!notificationsEnabled);
+function ensureNotificationModalElements() {
+  if (notificationModalElements) {
+    return notificationModalElements;
+  }
+  if (typeof document === "undefined") return null;
+  const modal = document.getElementById("notification-optin-modal");
+  if (!modal) return null;
+  const form = document.getElementById("notification-optin-form");
+  const emailInput = document.getElementById("notification-optin-email");
+  const verifiedInput = document.getElementById(
+    "notification-optin-verification"
+  );
+  const submitButton = modal.querySelector('button[type="submit"]');
+
+  notificationModalElements = {
+    modal,
+    form,
+    emailInput,
+    verifiedInput,
+    submitButton,
+  };
+
+  if (!modal.dataset.bound) {
+    const closeControls = modal.querySelectorAll('[data-action="close-modal"]');
+    closeControls.forEach((control) => {
+      control.addEventListener("click", () => closeNotificationOptInModal());
+    });
+
+    modal.addEventListener("click", (event) => {
+      const target = event.target;
+      if (
+        target === modal ||
+        (target &&
+          target.classList &&
+          target.classList.contains("modal__backdrop"))
+      ) {
+        closeNotificationOptInModal();
+      }
+    });
+
+    form?.addEventListener("submit", handleNotificationModalSubmit);
+    modal.dataset.bound = "true";
+  }
+
+  if (!notificationModalKeydownBound) {
+    document.addEventListener("keydown", handleNotificationModalKeydown);
+    notificationModalKeydownBound = true;
+  }
+
+  return notificationModalElements;
+}
+
+function openNotificationOptInModal(options = {}) {
+  const elements = ensureNotificationModalElements();
+  if (!elements) {
+    return Promise.resolve(null);
+  }
+
+  const { modal, emailInput, verifiedInput, submitButton } = elements;
+
+  if (notificationModalResolver) {
+    notificationModalResolver(null);
+    notificationModalResolver = null;
+  }
+
+  notificationModalLastFocus = document.activeElement;
+  notificationModalOptions = { ...options };
+
+  const storedEmail = getStoredNotificationContact();
+  const storedVerified = getStoredNotificationVerification();
+
+  if (emailInput) {
+    const emailCandidate =
+      typeof options.prefillEmail === "string" && options.prefillEmail.trim()
+        ? options.prefillEmail.trim()
+        : storedEmail;
+    emailInput.value = emailCandidate || "";
+  }
+
+  if (verifiedInput) {
+    const verifiedCandidate =
+      typeof options.prefillVerified === "boolean"
+        ? options.prefillVerified
+        : storedVerified;
+    verifiedInput.checked = Boolean(verifiedCandidate);
+  }
+
+  modal.setAttribute("aria-hidden", "false");
+  document.body.dataset.notificationModal = "open";
+
+  setNotificationModalBusy(false);
+
+  requestAnimationFrame(() => {
+    modal.classList.add("modal--visible");
+    if (emailInput) {
+      emailInput.focus();
+      emailInput.select?.();
+    } else {
+      submitButton?.focus();
+    }
+  });
+
+  return new Promise((resolve) => {
+    notificationModalResolver = resolve;
+  });
+}
+
+function ensureNotificationModalStructure() {
+  if (typeof document === "undefined") return null;
+  let modal = document.getElementById("notification-optin-modal");
+  if (modal) return modal;
+  if (!document.body) return null;
+
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = `
+      <div
+        class="modal notification-modal"
+        id="notification-optin-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="notification-optin-title"
+        aria-hidden="true"
+      >
+        <div class="modal__backdrop" data-action="close-modal"></div>
+        <div class="modal__dialog" role="document">
+          <header class="modal__header">
+            <h2 id="notification-optin-title">Enable content alerts</h2>
+            <button
+              type="button"
+              class="modal__close"
+              data-action="close-modal"
+              aria-label="Close notification preferences"
+            >
+              ×
+            </button>
+          </header>
+          <div class="modal__body">
+            <p>
+              Stay in the loop when new articles or podcast episodes are
+              published. You can switch this off anytime from the footer toggle.
+            </p>
+            <form class="modal__form" id="notification-optin-form">
+              <fieldset>
+                <legend class="sr-only">Notification destinations</legend>
+                <div class="form-field">
+                  <label for="notification-optin-email">Delivery email</label>
+                  <input
+                    type="email"
+                    id="notification-optin-email"
+                    name="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                  />
+                  <p class="form-hint">
+                    We'll send updates to this address when new content goes
+                    live.
+                  </p>
+                </div>
+                <div class="form-field">
+                  <label class="checkbox">
+                    <input
+                      type="checkbox"
+                      id="notification-optin-verification"
+                      name="verified"
+                    />
+                    <span>I'm a verified team member (skip manual confirmation)</span>
+                  </label>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <footer class="modal__footer">
+            <button type="button" class="button-secondary" data-action="close-modal">
+              Not now
+            </button>
+            <button type="submit" form="notification-optin-form" class="button-primary">
+              Enable notifications
+            </button>
+          </footer>
+        </div>
+      </div>
+    `.trim();
+
+  modal = wrapper.firstElementChild;
+  if (!modal) return null;
+  document.body.appendChild(modal);
+  return modal;
+}
+
+function ensureNotificationModalElements() {
+  if (notificationModalElements) {
+    return notificationModalElements;
+  }
+  if (typeof document === "undefined") return null;
+  const modal = ensureNotificationModalStructure();
+  if (!modal) return null;
+  const form = modal.querySelector("#notification-optin-form");
+  const emailInput = modal.querySelector("#notification-optin-email");
+  const verifiedInput = modal.querySelector("#notification-optin-verification");
+  const submitButton = modal.querySelector('button[type="submit"]');
+  const closeControls = modal.querySelectorAll('[data-action="close-modal"]');
+
+  notificationModalElements = {
+    modal,
+    form,
+    emailInput,
+    verifiedInput,
+    submitButton,
+  };
+
+  if (!modal.dataset.bound) {
+    if (closeControls?.length) {
+      closeControls.forEach((control) => {
+        control.addEventListener("click", () => closeNotificationOptInModal());
+      });
+    }
+
+    modal.addEventListener("click", (event) => {
+      const target = event.target;
+      if (
+        target === modal ||
+        (target &&
+          target.classList &&
+          target.classList.contains("modal__backdrop"))
+      ) {
+        closeNotificationOptInModal();
+      }
+    });
+
+    form?.addEventListener("submit", handleNotificationModalSubmit);
+    modal.dataset.bound = "true";
+  }
+
+  if (!notificationModalKeydownBound) {
+    document.addEventListener("keydown", handleNotificationModalKeydown);
+    notificationModalKeydownBound = true;
+  }
+
+  return notificationModalElements;
+}
+
+function closeNotificationOptInModal(result = null) {
+  const elements = ensureNotificationModalElements();
+  if (!elements) return;
+  const { modal, form } = elements;
+  if (!modal) return;
+
+  modal.setAttribute("aria-hidden", "true");
+  modal.classList.remove("modal--visible");
+  delete document.body.dataset.notificationModal;
+  form?.reset();
+  setNotificationModalBusy(false);
+
+  if (notificationModalResolver) {
+    notificationModalResolver(result);
+    notificationModalResolver = null;
+  }
+
+  const returnFocus = notificationModalLastFocus;
+  notificationModalLastFocus = null;
+  notificationModalOptions = null;
+
+  if (returnFocus && typeof returnFocus.focus === "function") {
+    requestAnimationFrame(() => returnFocus.focus());
+  }
+}
+
+function setNotificationModalBusy(busy) {
+  const elements = ensureNotificationModalElements();
+  if (!elements) return;
+  const { submitButton } = elements;
+  if (!submitButton) return;
+  if (busy) {
+    submitButton.disabled = true;
+    submitButton.dataset.originalLabel =
+      submitButton.dataset.originalLabel || submitButton.textContent || "";
+    submitButton.textContent = "Enabling…";
+    submitButton.setAttribute("aria-busy", "true");
+  } else {
+    if (submitButton.dataset.originalLabel) {
+      submitButton.textContent = submitButton.dataset.originalLabel;
+      delete submitButton.dataset.originalLabel;
+    }
+    submitButton.disabled = false;
+    submitButton.removeAttribute("aria-busy");
+  }
+}
+
+async function handleNotificationModalSubmit(event) {
+  event.preventDefault();
+  const elements = ensureNotificationModalElements();
+  if (!elements) {
+    closeNotificationOptInModal(null);
+    return;
+  }
+
+  const { emailInput, verifiedInput } = elements;
+  const rawEmail = emailInput?.value ? String(emailInput.value).trim() : "";
+
+  if (!rawEmail) {
+    emailInput?.focus();
+    emailInput?.reportValidity?.();
+    return;
+  }
+
+  setNotificationModalBusy(true);
+
+  const previousState = notificationsEnabled;
+  const verified = Boolean(verifiedInput?.checked);
+
+  persistNotificationContact(rawEmail);
+  persistNotificationVerification(verified);
+
+  setNotificationsEnabled(true, { announce: false });
+
+  try {
+    await api("/auth/me/notifications", {
+      method: "PATCH",
+      body: JSON.stringify({ enabled: true }),
+    });
+  } catch (error) {
+    setNotificationsEnabled(previousState, { announce: false });
+    const message =
+      error?.message || "Failed to enable notifications. Please try again.";
+    showNotification(message, "error", "Notifications");
+    setNotificationModalBusy(false);
+    return;
+  }
+
+  setNotificationsEnabled(true);
+  closeNotificationOptInModal({ email: rawEmail, verified });
+}
+
+function handleNotificationModalKeydown(event) {
+  if (event.key !== "Escape") return;
+  const elements =
+    notificationModalElements || ensureNotificationModalElements();
+  if (!elements?.modal) return;
+  if (elements.modal.getAttribute("aria-hidden") === "true") return;
+  event.preventDefault();
+  closeNotificationOptInModal();
+}
+
+async function toggleNotifications(event) {
+  if (event?.preventDefault) {
+    event.preventDefault();
+  }
+
+  if (notificationsEnabled) {
+    setNotificationsEnabled(false);
+    return;
+  }
+
+  const storedContact = getStoredNotificationContact();
+  const ready = await ensureNotificationsReady({
+    prefillEmail: storedContact || undefined,
+  });
+  if (!ready) {
+    updateNotificationToggleUi();
+    return;
+  }
+
+  setNotificationsEnabled(true);
+}
+
+function setNotificationButtonBusy(button, busy) {
+  if (!button) return;
+  if (busy) {
+    if (!button.dataset.originalLabel) {
+      button.dataset.originalLabel = button.innerHTML;
+    }
+    button.disabled = true;
+    button.classList.add("is-busy");
+    button.setAttribute("aria-busy", "true");
+    button.innerHTML = "⏳ Sending…";
+  } else {
+    button.classList.remove("is-busy");
+    button.removeAttribute("aria-busy");
+    const wasSent = button.classList.contains("icon-button-notify--sent");
+    if (!wasSent) {
+      button.disabled = false;
+    }
+    if (button.dataset.originalLabel) {
+      button.innerHTML = button.dataset.originalLabel;
+      delete button.dataset.originalLabel;
+    }
+  }
+}
+
+async function ensureNotificationsReady(options = {}) {
+  const storedContact = getStoredNotificationContact();
+  if (notificationsEnabled && storedContact) {
+    return true;
+  }
+
+  const user = typeof getUser === "function" ? getUser() : null;
+  const emailCandidates = [
+    typeof options.prefillEmail === "string" ? options.prefillEmail : null,
+    storedContact,
+    user?.email,
+    user?.contact_email,
+    user?.contact?.email,
+  ];
+  let prefillEmail = "";
+  for (const candidate of emailCandidates) {
+    if (typeof candidate === "string" && candidate.trim()) {
+      prefillEmail = candidate.trim();
+      break;
+    }
+  }
+
+  const storedVerified = getStoredNotificationVerification();
+  const verifiedCandidates = [
+    typeof options.prefillVerified === "boolean"
+      ? options.prefillVerified
+      : null,
+    typeof storedVerified === "boolean" ? storedVerified : null,
+    typeof user?.email_verified === "boolean" ? user.email_verified : null,
+    typeof user?.emailVerified === "boolean" ? user.emailVerified : null,
+    typeof user?.verified === "boolean" ? user.verified : null,
+    typeof user?.is_verified === "boolean" ? user.is_verified : null,
+  ];
+  let prefillVerified;
+  for (const candidate of verifiedCandidates) {
+    if (typeof candidate === "boolean") {
+      prefillVerified = candidate;
+      break;
+    }
+  }
+
+  const result = await openNotificationOptInModal({
+    prefillEmail,
+    prefillVerified,
+  });
+  return Boolean(result);
+}
+
+function applyArticleNotificationUpdate(articleId, payload = {}) {
+  if (!articleId) return;
+  const index = DASHBOARD_ARTICLES.findIndex(
+    (article) => article.id === articleId
+  );
+  if (index < 0) return;
+
+  const current = DASHBOARD_ARTICLES[index] || {};
+  const normalizedState = normalizeNotificationState(
+    payload.notification_state || payload
+  );
+  const next = {
+    ...current,
+    notification_state: normalizedState,
+  };
+
+  if (payload.updated_at) {
+    next.updated_at = payload.updated_at;
+  } else if (normalizedState.sent_at && !current.pendingAction) {
+    next.updated_at = normalizedState.sent_at;
+  }
+
+  DASHBOARD_ARTICLES[index] = next;
+  renderAdminArticles("dashboard-articles-list");
+  renderGuestArticles("guest-articles-list", DASHBOARD_ARTICLES);
+}
+
+function applyPodcastNotificationUpdate(podcastId, payload = {}) {
+  if (!podcastId) return;
+  const index = DASHBOARD_PODCASTS.findIndex(
+    (podcast) => podcast.id === podcastId
+  );
+  if (index < 0) return;
+
+  const current = DASHBOARD_PODCASTS[index] || {};
+  const normalizedState = normalizeNotificationState(
+    payload.notification_state || payload
+  );
+  const next = {
+    ...current,
+    notification_state: normalizedState,
+  };
+
+  if (payload.updated_at) {
+    next.updated_at = payload.updated_at;
+  } else if (normalizedState.sent_at && !current.pendingAction) {
+    next.updated_at = normalizedState.sent_at;
+  }
+
+  DASHBOARD_PODCASTS[index] = next;
+  renderAdminPodcasts("dashboard-podcasts-list");
+  renderGuestPodcasts("guest-podcasts-list", DASHBOARD_PODCASTS);
+}
+
+async function sendArticleNotification(articleId, trigger) {
+  if (!articleId) return;
+  const article = findArticleById(articleId);
+  if (!article) {
+    showNotification("Article not found.", "error", "Notifications", {
+      force: true,
+    });
+    return;
+  }
+
+  const state = normalizeNotificationState(article.notification_state);
+  if (state.sent) {
+    showNotification(
+      "Notification already sent for this article.",
+      "info",
+      "Notifications",
+      { force: true }
+    );
+    return;
+  }
+
+  const user = typeof getUser === "function" ? getUser() : null;
+  const ready = await ensureNotificationsReady({
+    prefillEmail: user?.email,
+  });
+  if (!ready) {
+    showNotification(
+      "Notification cancelled before sending.",
+      "info",
+      "Notifications",
+      { force: true }
+    );
+    return;
+  }
+
+  if (trigger) {
+    setNotificationButtonBusy(trigger, true);
+  }
+
+  try {
+    const response = await api(`/dashboard/articles/${articleId}/notify`, {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+
+    if (response?.article?.notification_state) {
+      applyArticleNotificationUpdate(articleId, response.article);
+    }
+
+    const recipientCount = Number(response?.recipient_count);
+    const message =
+      Number.isFinite(recipientCount) && recipientCount > 0
+        ? `Notification sent to ${recipientCount} recipient${
+            recipientCount === 1 ? "" : "s"
+          }.`
+        : "Notification sent successfully.";
+    showNotification(message, "success", "Notifications", {
+      force: true,
+    });
+  } catch (error) {
+    // Errors are already surfaced by the api() helper.
+  } finally {
+    if (trigger && trigger.isConnected) {
+      setNotificationButtonBusy(trigger, false);
+    }
+  }
+}
+
+async function sendPodcastNotification(podcastId, trigger) {
+  if (!podcastId) return;
+  const podcast = findPodcastById(podcastId);
+  if (!podcast) {
+    showNotification("Podcast not found.", "error", "Notifications", {
+      force: true,
+    });
+    return;
+  }
+
+  const state = normalizeNotificationState(podcast.notification_state);
+  if (state.sent) {
+    showNotification(
+      "Notification already sent for this podcast.",
+      "info",
+      "Notifications",
+      { force: true }
+    );
+    return;
+  }
+
+  const user = typeof getUser === "function" ? getUser() : null;
+  const ready = await ensureNotificationsReady({
+    prefillEmail: user?.email,
+  });
+  if (!ready) {
+    showNotification(
+      "Notification cancelled before sending.",
+      "info",
+      "Notifications",
+      { force: true }
+    );
+    return;
+  }
+
+  if (trigger) {
+    setNotificationButtonBusy(trigger, true);
+  }
+
+  try {
+    const response = await api(`/dashboard/podcasts/${podcastId}/notify`, {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+
+    if (response?.podcast?.notification_state) {
+      applyPodcastNotificationUpdate(podcastId, response.podcast);
+    } else if (response?.notification_state) {
+      applyPodcastNotificationUpdate(podcastId, response);
+    }
+
+    const recipientCount = Number(response?.recipient_count);
+    const message =
+      Number.isFinite(recipientCount) && recipientCount > 0
+        ? `Notification sent to ${recipientCount} recipient${
+            recipientCount === 1 ? "" : "s"
+          }.`
+        : "Notification sent successfully.";
+    showNotification(message, "success", "Notifications", {
+      force: true,
+    });
+  } catch (error) {
+    // Errors are already surfaced by the api() helper.
+  } finally {
+    if (trigger && trigger.isConnected) {
+      setNotificationButtonBusy(trigger, false);
+    }
+  }
 }
 
 function ensureNotificationToggle(user) {
@@ -758,10 +1573,21 @@ function ensureNotificationToggle(user) {
     toggle.id = "notifications-toggle";
     toggle.type = "button";
     toggle.className = "notification-toggle";
-    toggle.addEventListener("click", () => toggleNotifications());
+    toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      toggleNotifications(event);
+    });
+    toggle.dataset.bound = "true";
   } else {
     toggle.classList.add("notification-toggle");
     toggle.type = "button";
+    if (!toggle.dataset.bound) {
+      toggle.addEventListener("click", (event) => {
+        event.preventDefault();
+        toggleNotifications(event);
+      });
+      toggle.dataset.bound = "true";
+    }
   }
 
   if (toggle.parentElement !== container) {
@@ -941,6 +1767,64 @@ function updateArticleAudioCounterFromTracks(tracks = []) {
       articleAudioCounter = value;
     }
   });
+}
+
+function normalizeNotificationState(value) {
+  const base = {
+    sent: false,
+    sent_at: null,
+    sent_by: null,
+    sent_by_email: null,
+    sent_by_id: null,
+    recipient_count: 0,
+    subject: null,
+  };
+
+  if (!value || typeof value !== "object") {
+    return base;
+  }
+
+  const sentAtRaw = value.sent_at || value.sentAt || null;
+  let sentAt = null;
+  if (sentAtRaw) {
+    const date = new Date(sentAtRaw);
+    if (!Number.isNaN(date.getTime())) {
+      sentAt = date.toISOString();
+    }
+  }
+
+  const recipientCount = Number(value.recipient_count ?? value.recipientCount);
+
+  return {
+    ...base,
+    sent: Boolean(value.sent || sentAt),
+    sent_at: sentAt,
+    sent_by:
+      typeof value.sent_by === "string"
+        ? value.sent_by.trim() || null
+        : typeof value.sentBy === "string"
+        ? value.sentBy.trim() || null
+        : null,
+    sent_by_email:
+      typeof value.sent_by_email === "string"
+        ? value.sent_by_email.trim() || null
+        : typeof value.sentByEmail === "string"
+        ? value.sentByEmail.trim() || null
+        : null,
+    sent_by_id:
+      typeof value.sent_by_id === "string"
+        ? value.sent_by_id.trim() || null
+        : typeof value.sentById === "string"
+        ? value.sentById.trim() || null
+        : null,
+    recipient_count: Number.isFinite(recipientCount) ? recipientCount : 0,
+    subject:
+      typeof value.subject === "string"
+        ? value.subject.trim() || null
+        : typeof value.subjectLine === "string"
+        ? value.subjectLine.trim() || null
+        : null,
+  };
 }
 
 function normalizeDashboardNote(note) {
@@ -1217,6 +2101,7 @@ function normalizeDashboardPodcast(podcast) {
     audio,
     created_at: podcast.created_at || null,
     updated_at: podcast.updated_at || null,
+    notification_state: normalizeNotificationState(podcast.notification_state),
   };
 }
 
@@ -1310,6 +2195,7 @@ function normalizeDashboardArticle(article) {
     audio_tracks: normalizedAudioTracks,
     created_at: article.created_at || null,
     updated_at: article.updated_at || null,
+    notification_state: normalizeNotificationState(article.notification_state),
   };
 }
 
@@ -3251,6 +4137,10 @@ function renderGuestArticleCard(article) {
   const audioMarkup = renderArticleAudioTracks(article.audio_tracks, {
     variant: "guest",
   });
+  const notifyAction = renderArticleNotificationAction(article);
+  const actionsMarkup = notifyAction
+    ? `<div class="guest-content-actions">${notifyAction}</div>`
+    : "";
 
   return `
     <article class="guest-article-card">
@@ -3269,6 +4159,7 @@ function renderGuestArticleCard(article) {
         ${galleryMarkup}
         ${audioMarkup}
         ${attachmentsMarkup}
+        ${actionsMarkup}
       </div>
     </article>
   `;
@@ -3324,6 +4215,13 @@ function renderGuestContentFeed() {
   const wrapper = document.getElementById("guest-feed-wrapper");
   const list = document.getElementById("guest-feed-list");
   if (!wrapper || !list) return;
+
+  list.removeEventListener("click", handleDashboardArticleAction);
+  list.removeEventListener("click", handleDashboardPodcastAction);
+  if (CAN_MANAGE_ARTICLES && dashboardViewMode === "guest") {
+    list.addEventListener("click", handleDashboardArticleAction);
+    list.addEventListener("click", handleDashboardPodcastAction);
+  }
 
   if (dashboardViewMode === "admin") {
     list.innerHTML = "";
@@ -3420,7 +4318,15 @@ function updateGuestLayoutOrder() {
 function renderGuestArticles(targetId, articles = DASHBOARD_ARTICLES) {
   const container = document.getElementById(targetId);
   const wrapper = document.getElementById("guest-articles-wrapper");
+  const user = getUser();
   if (!container) return;
+  container.removeEventListener("click", handleDashboardArticleAction);
+  if (CAN_MANAGE_ARTICLES) {
+    container.addEventListener("click", handleDashboardArticleAction);
+  }
+  if (wrapper && user) {
+    wrapper.classList.remove("guest-section--locked");
+  }
   const hasArticles = Array.isArray(articles) && articles.length > 0;
   const canManageGuestArticles =
     CAN_MANAGE_ARTICLES && dashboardViewMode === "guest";
@@ -3463,7 +4369,10 @@ function clearGuestArticlesDisplay() {
   if (list) {
     list.innerHTML = "";
   }
-  wrapper?.classList.add("hidden");
+  if (wrapper) {
+    wrapper.classList.add("hidden");
+    wrapper.classList.remove("guest-section--locked");
+  }
   renderGuestContentFeed();
 }
 
@@ -3471,21 +4380,21 @@ function showGuestContentAuthGate() {
   const articleWrapper = document.getElementById("guest-articles-wrapper");
   const articleList = document.getElementById("guest-articles-list");
   if (articleList) {
-    articleList.innerHTML =
-      '<p class="placeholder">Register or log in to view guest articles. <a href="register.html">Create an account</a> or <a href="login.html">log in</a> to continue.</p>';
+    articleList.innerHTML = "";
   }
   if (articleWrapper) {
-    articleWrapper.classList.remove("hidden");
+    articleWrapper.classList.add("hidden");
+    articleWrapper.classList.remove("guest-section--locked");
   }
 
   const podcastWrapper = document.getElementById("guest-podcasts-wrapper");
   const podcastList = document.getElementById("guest-podcasts-list");
   if (podcastList) {
-    podcastList.innerHTML =
-      '<p class="placeholder">Podcasts are available after you register or log in. <a href="register.html">Create an account</a> or <a href="login.html">log in</a> for access.</p>';
+    podcastList.innerHTML = "";
   }
   if (podcastWrapper) {
-    podcastWrapper.classList.remove("hidden");
+    podcastWrapper.classList.add("hidden");
+    podcastWrapper.classList.remove("guest-section--locked");
   }
 
   const feedWrapper = document.getElementById("guest-feed-wrapper");
@@ -3494,7 +4403,11 @@ function showGuestContentAuthGate() {
     feedList.innerHTML =
       '<p class="placeholder">Register or log in to explore guest articles and podcasts.</p>';
   }
-  feedWrapper?.classList.remove("hidden");
+  if (feedWrapper) {
+    feedWrapper.classList.remove("hidden");
+  }
+
+  updateGuestLayoutOrder();
 }
 
 function renderGuestPodcastCard(podcast) {
@@ -3540,6 +4453,10 @@ function renderGuestPodcastCard(podcast) {
         .map((part) => `<span>${part}</span>`)
         .join("")}</div>`
     : "";
+  const notifyAction = renderPodcastNotificationAction(podcast);
+  const actionsMarkup = notifyAction
+    ? `<div class="guest-content-actions">${notifyAction}</div>`
+    : "";
 
   return `
     <article class="guest-podcast-card">
@@ -3549,6 +4466,7 @@ function renderGuestPodcastCard(podcast) {
       ${descriptionMarkup}
       ${playerMarkup}
       ${metaMarkup}
+      ${actionsMarkup}
     </article>
   `;
 }
@@ -3557,6 +4475,14 @@ function renderGuestPodcasts(targetId, podcasts = DASHBOARD_PODCASTS) {
   const container = document.getElementById(targetId);
   const wrapper = document.getElementById("guest-podcasts-wrapper");
   if (!container) return;
+  container.removeEventListener("click", handleDashboardPodcastAction);
+  if (CAN_MANAGE_ARTICLES) {
+    container.addEventListener("click", handleDashboardPodcastAction);
+  }
+
+  if (wrapper) {
+    wrapper.classList.remove("guest-section--locked");
+  }
 
   const hasPodcasts = Array.isArray(podcasts) && podcasts.length > 0;
   const canManageGuestContent =
@@ -3600,7 +4526,10 @@ function clearGuestPodcastsDisplay() {
   if (list) {
     list.innerHTML = "";
   }
-  wrapper?.classList.add("hidden");
+  if (wrapper) {
+    wrapper.classList.add("hidden");
+    wrapper.classList.remove("guest-section--locked");
+  }
   renderGuestContentFeed();
 }
 
@@ -3706,6 +4635,7 @@ function renderAdminPodcastCard(podcast) {
 
   const actionsMarkup = CAN_MANAGE_ARTICLES
     ? `<div class="dashboard-podcast-card__actions">
+        ${renderPodcastNotificationAction(podcast)}
         <button type="button" class="icon-button" data-action="edit-podcast" data-id="${escapeHtml(
           podcast.id
         )}">Edit</button>
@@ -4915,6 +5845,7 @@ function collectArticleAudioTracks() {
 
 function bindArticleFormControls() {
   const addArticleBtn = document.getElementById("dashboard-article-add");
+  const cancelButton = document.getElementById("dashboard-article-cancel");
   if (addArticleBtn && !addArticleBtn.dataset.bound) {
     addArticleBtn.dataset.mode = addArticleBtn.dataset.mode || "add";
     addArticleBtn.setAttribute("aria-pressed", "false");
@@ -4935,6 +5866,18 @@ function bindArticleFormControls() {
       setArticleEditorSessionActive(true, { scroll: true, focus: true });
     });
     addArticleBtn.dataset.bound = "true";
+  }
+
+  if (cancelButton && !cancelButton.dataset.bound) {
+    cancelButton.addEventListener("click", () => {
+      if (dashboardViewMode === "guest" && guestArticleEditMode) {
+        setGuestArticleEditMode(false);
+      } else {
+        resetArticleForm();
+        setArticleEditorSessionActive(false);
+      }
+    });
+    cancelButton.dataset.bound = "true";
   }
 
   const linkList = document.getElementById("dashboard-article-links-list");
@@ -5087,7 +6030,7 @@ function bindGuestArticleManagementControls() {
     saveButton.addEventListener("click", async () => {
       if (saveButton.dataset.busy === "true") return;
       if (!CAN_MANAGE_ARTICLES || dashboardViewMode !== "guest") return;
-      if (!guestArticleEditMode) {
+      if (!guestArticleEditMode && !hasPendingChangesFor("articles")) {
         setGuestArticleEditMode(true);
       }
 
@@ -5131,12 +6074,18 @@ function setArticleEditorSessionActive(active, options = {}) {
       form.classList.remove("hidden");
       form.dataset.articleEditorActive = "true";
     } else {
+      if (dashboardViewMode === "admin") {
+        form.classList.add("hidden");
+      }
       delete form.dataset.articleEditorActive;
     }
   }
 
   if (editor) {
     editor.classList.toggle("guest-article-editor--editing", isActive);
+    if (dashboardViewMode === "admin") {
+      editor.classList.toggle("hidden", !isActive);
+    }
   }
 
   if (addButton) {
@@ -5407,25 +6356,29 @@ async function handleDashboardArticleAction(event) {
   const articleId = target.dataset.id;
   if (!articleId) return;
   if (target.dataset.action === "edit-article") {
-    if (dashboardViewMode !== "guest") {
-      setDashboardViewMode(
-        "guest",
-        guestViewOptions({
-          persistPreference: false,
-          lockGuestPreview: true,
-          keepSidebar: true,
-          message: {
-            title: "Guest editor enabled",
-            body: "You're now using the guest-mode editor. Publish updates here and switch back to admin view to manage the list.",
-          },
-        })
-      );
-    }
-    setGuestArticleEditMode(true);
     const article = findArticleById(articleId);
-    if (article) {
-      populateArticleForm(article, { scroll: true, focus: true });
+    if (!article) return;
+
+    if (dashboardViewMode === "guest") {
+      if (!guestArticleEditMode) {
+        setGuestArticleEditMode(true);
+      }
+    } else {
+      setGuestArticleEditMode(false);
+      setGuestPodcastEditMode(false);
+      setDashboardViewMode("admin", {
+        showAdminSections: true,
+        showAdminArticles: true,
+        persistPreference: false,
+        keepSidebar: true,
+        force: true,
+      });
+      setDashboardEditMode(true);
     }
+
+    populateArticleForm(article, { scroll: true, focus: true });
+  } else if (target.dataset.action === "notify-article") {
+    await sendArticleNotification(articleId, target);
   } else if (target.dataset.action === "delete-article") {
     await removeArticle(articleId);
   }
@@ -5561,6 +6514,10 @@ function populatePodcastForm(podcast, options = {}) {
   const form = document.getElementById("dashboard-podcast-form");
   if (!form || !podcast) return;
   form.dataset.editingId = podcast.id;
+  const editor = document.getElementById("guest-podcast-editor");
+  if (editor && dashboardViewMode === "admin") {
+    editor.classList.remove("hidden");
+  }
   const titleInput = document.getElementById("dashboard-podcast-title");
   const descriptionInput = document.getElementById(
     "dashboard-podcast-description"
@@ -5610,6 +6567,11 @@ function resetPodcastForm() {
   }
   const submitButton = form.querySelector('button[type="submit"]');
   if (submitButton) submitButton.textContent = "Publish podcast";
+  if (dashboardViewMode === "admin") {
+    form.classList.add("hidden");
+    const editor = document.getElementById("guest-podcast-editor");
+    editor?.classList.add("hidden");
+  }
 }
 
 function ensurePodcastFormReady() {
@@ -5791,11 +6753,28 @@ async function handleDashboardPodcastAction(event) {
   const podcastId = target.dataset.id;
   if (!podcastId) return;
   if (target.dataset.action === "edit-podcast") {
-    setDashboardEditMode(true);
     const podcast = findPodcastById(podcastId);
-    if (podcast) {
-      populatePodcastForm(podcast, { scroll: true, focus: true });
+    if (!podcast) return;
+
+    if (dashboardViewMode === "guest") {
+      if (!guestPodcastEditMode) {
+        setGuestPodcastEditMode(true);
+      }
+    } else {
+      setGuestArticleEditMode(false);
+      setGuestPodcastEditMode(false);
+      setDashboardViewMode("admin", {
+        showAdminSections: true,
+        persistPreference: false,
+        keepSidebar: true,
+        force: true,
+      });
+      setDashboardEditMode(true);
     }
+
+    populatePodcastForm(podcast, { scroll: true, focus: true });
+  } else if (target.dataset.action === "notify-podcast") {
+    await sendPodcastNotification(podcastId, target);
   } else if (target.dataset.action === "delete-podcast") {
     await removePodcast(podcastId);
   }
@@ -6785,7 +7764,11 @@ function updateArticleEditorVisibility() {
 
   editor?.classList.toggle("hidden", !guestArticleEditMode);
   form?.classList.toggle("hidden", !guestArticleEditMode);
-  saveButton?.classList.toggle("hidden", !guestArticleEditMode);
+  const shouldShowSaveButton =
+    CAN_MANAGE_ARTICLES &&
+    dashboardViewMode === "guest" &&
+    (guestArticleEditMode || hasPendingChangesFor("articles"));
+  saveButton?.classList.toggle("hidden", !shouldShowSaveButton);
 
   if (toggle) {
     toggle.textContent = guestArticleEditMode
@@ -6890,7 +7873,11 @@ function updatePodcastEditorVisibility() {
   editor?.classList.toggle("hidden", !guestPodcastEditMode);
   form?.classList.toggle("hidden", !guestPodcastEditMode);
   addButton?.classList.toggle("hidden", !guestPodcastEditMode);
-  saveButton?.classList.toggle("hidden", !guestPodcastEditMode);
+  const shouldShowSaveButton =
+    CAN_MANAGE_ARTICLES &&
+    dashboardViewMode === "guest" &&
+    (guestPodcastEditMode || hasPendingChangesFor("podcasts"));
+  saveButton?.classList.toggle("hidden", !shouldShowSaveButton);
 
   document
     .querySelectorAll(".dashboard-podcast-card__actions")
@@ -6926,7 +7913,7 @@ function bindGuestPodcastManagementControls() {
     saveButton.addEventListener("click", async () => {
       if (saveButton.dataset.busy === "true") return;
       if (!CAN_MANAGE_ARTICLES || dashboardViewMode !== "guest") return;
-      if (!guestPodcastEditMode) {
+      if (!guestPodcastEditMode && !hasPendingChangesFor("podcasts")) {
         setGuestPodcastEditMode(true);
       }
 
@@ -7403,6 +8390,7 @@ function updateNav() {
   const navRegister = document.getElementById("nav-register");
   const navLogin = document.getElementById("nav-login");
   const btnLogout = document.getElementById("btn-logout");
+  const dashboardAdminCta = document.getElementById("dashboard-admin-cta");
 
   ensureNotificationToggle(user);
 
@@ -7419,6 +8407,11 @@ function updateNav() {
   }
   if (navAdmin)
     navAdmin.classList.toggle("hidden", !(user && user.role === "admin"));
+  if (dashboardAdminCta)
+    dashboardAdminCta.classList.toggle(
+      "hidden",
+      !(user && user.role === "admin")
+    );
   if (navRegister) navRegister.classList.toggle("hidden", !!user);
   if (navLogin) navLogin.classList.toggle("hidden", !!user);
   if (btnLogout) btnLogout.classList.toggle("hidden", !user);
@@ -8014,6 +9007,7 @@ async function onVerifyPage() {
 async function onDashboardPage() {
   const welcome = document.getElementById("welcome");
   if (!welcome) return;
+  welcome.classList.add("hidden");
 
   const viewControls = document.getElementById("dashboard-view-controls");
   const viewToggle = document.getElementById("dashboard-view-toggle");
@@ -8052,7 +9046,6 @@ async function onDashboardPage() {
 
   if (!user) {
     dashboardAdminDataLoaded = false;
-    welcome.textContent = "You're browsing as a visitor.";
     viewControls?.classList.add("hidden");
     showGuestState(
       {
@@ -8076,7 +9069,6 @@ async function onDashboardPage() {
   }
 
   const displayName = user.full_name || user.name || user.email || "User";
-  welcome.textContent = `Logged in as ${displayName} (${user.role})`;
 
   if (user.role !== "admin") {
     dashboardAdminDataLoaded = false;
@@ -9762,19 +10754,24 @@ function initializeImageLightbox() {
 document.addEventListener("DOMContentLoaded", async () => {
   updateNav();
   initializeImageLightbox();
+  ensureNotificationModalStructure();
+  ensureNotificationModalElements();
   switch (window.PAGE) {
     case "home":
+      initializeHeroParallax();
       await loadProjects("projects", { layout: "minimal" });
       await loadDocuments("documents");
       renderMembers("members");
       break;
     case "projects":
+      initializeHeroParallax();
       await loadProjects("projects", {
         layout: "detailed",
         scrollToHash: true,
       });
       break;
     case "members":
+      initializeHeroParallax();
       renderMembers("members-summary");
       renderMemberDetails("member-details");
       break;
@@ -9788,10 +10785,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       await onVerifyPage();
       break;
     case "dashboard":
+      initializeHeroParallax();
       await onDashboardPage();
       break;
     case "admin":
+      initializeHeroParallax();
       await onAdminPage();
+      break;
+    case "contact":
+      initializeHeroParallax();
       break;
   }
 });

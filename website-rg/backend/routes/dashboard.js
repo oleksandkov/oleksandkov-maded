@@ -287,28 +287,55 @@ function formatTimestamp(value) {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
+function buildNotificationState(overrides = {}) {
+  return {
+    sent: false,
+    sent_at: null,
+    sent_by: null,
+    sent_by_email: null,
+    sent_by_id: null,
+    recipient_count: 0,
+    subject: null,
+    ...overrides,
+  };
+}
+
 function formatNotificationState(value) {
+  const base = buildNotificationState();
   if (!value || typeof value !== "object") {
-    return {
-      sent: false,
-      sent_at: null,
-      sent_by: null,
-      sent_by_email: null,
-      recipient_count: 0,
-      subject: null,
-    };
+    return base;
   }
   const sentAt = formatTimestamp(value.sent_at || value.sentAt);
-  const sentByEmail =
-    typeof value.sent_by_email === "string" ? value.sent_by_email : null;
-  const recipientCountRaw = Number(value.recipient_count);
+  const sentByEmailCandidate =
+    typeof value.sent_by_email === "string"
+      ? value.sent_by_email
+      : typeof value.sentByEmail === "string"
+      ? value.sentByEmail
+      : null;
+  const sentByIdCandidate =
+    typeof value.sent_by_id === "string"
+      ? value.sent_by_id
+      : typeof value.sentById === "string"
+      ? value.sentById
+      : null;
+  const recipientCountRaw = Number(
+    value.recipient_count ?? value.recipientCount
+  );
+  const subjectCandidate =
+    typeof value.subject === "string"
+      ? value.subject
+      : typeof value.subjectLine === "string"
+      ? value.subjectLine
+      : null;
   return {
-    sent: Boolean(sentAt),
+    ...base,
+    sent: Boolean(value.sent || sentAt),
     sent_at: sentAt,
     sent_by: value.sent_by || value.sentBy || null,
-    sent_by_email: sentByEmail,
+    sent_by_email: sentByEmailCandidate,
+    sent_by_id: sentByIdCandidate,
     recipient_count: Number.isFinite(recipientCountRaw) ? recipientCountRaw : 0,
-    subject: value.subject || null,
+    subject: subjectCandidate,
   };
 }
 
@@ -779,6 +806,7 @@ function formatArticleDoc(doc, options = {}) {
     gallery_images = [],
     audio_tracks = [],
     image_storage_key,
+    notification_state,
     ...rest
   } = doc;
 
@@ -800,6 +828,8 @@ function formatArticleDoc(doc, options = {}) {
         download: true,
       })
     : null;
+  const formattedNotificationState =
+    formatNotificationState(notification_state);
 
   return {
     id: _id?.toString?.() || String(_id),
@@ -807,6 +837,7 @@ function formatArticleDoc(doc, options = {}) {
     image_storage_key: heroStorageKey || null,
     image_proxy_url: imageProxyUrl,
     image_proxy_download_url: imageProxyDownloadUrl,
+    notification_state: formattedNotificationState,
     links: (links || []).map((link) => ({
       id: toEmbeddedId(link?.id),
       label: link?.label || null,
@@ -1183,6 +1214,7 @@ function formatPodcastDoc(doc, options = {}) {
     updated_at,
     audio,
     authors: rawAuthors,
+    notification_state,
     ...rest
   } = doc;
   const req = options.req || null;
@@ -1233,6 +1265,7 @@ function formatPodcastDoc(doc, options = {}) {
     audio: formattedAudio,
     created_at: formatTimestamp(created_at),
     updated_at: formatTimestamp(updated_at),
+    notification_state: formatNotificationState(notification_state),
   };
 }
 
@@ -1285,6 +1318,7 @@ router.post("/articles", requireAdmin, async (req, res) => {
       updated_at: now,
       created_by: req.user?.id || null,
       updated_by: req.user?.id || null,
+      notification_state: buildNotificationState(),
     };
 
     const articles = getCollection("dashboard_articles");
@@ -1424,8 +1458,19 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
       return res.status(404).json({ error: "Article not found" });
     }
 
-    const article = formatArticleDoc(articleDoc);
-    const recipients = getNotificationRecipients(req.body?.extraRecipients);
+    const existingNotification = formatNotificationState(
+      articleDoc.notification_state
+    );
+    if (existingNotification.sent) {
+      return res
+        .status(409)
+        .json({ error: "Notification already sent for this article." });
+    }
+
+    const article = formatArticleDoc(articleDoc, { req });
+    const recipients = await getNotificationRecipients(
+      req.body?.extraRecipients
+    );
 
     if (!recipients.length) {
       return res
@@ -1442,13 +1487,13 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
     const defaultSubject =
       alertType === "suspicious-device"
         ? `Security alert: activity detected for "${article.title}"`
-        : `New guest article: ${article.title}`;
+        : `New article update: ${article.title}`;
     const subject =
       typeof req.body?.subject === "string" && req.body.subject.trim()
         ? req.body.subject.trim()
         : defaultSubject;
 
-    const description = article.description || "A new guest article is ready.";
+    const description = article.description || "A new article is ready.";
     const timestampValue =
       article.updated_at || article.created_at || new Date();
     const timestamp = new Date(timestampValue);
@@ -1469,9 +1514,10 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
     const deviceText =
       alertType === "suspicious-device"
         ? "This notification has been marked as a suspicious device alert. If you did not initiate this change, please investigate immediately."
-        : "Share this update with guests and partners when ready.";
+        : "Share this update when you're ready.";
 
     const textSections = [
+      "Hello, here some news.",
       `Title: ${article.title}`,
       `Updated: ${formattedTimestamp}`,
       description ? `Summary: ${description}` : null,
@@ -1481,16 +1527,16 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
       article.links && article.links.length && article.links[0]?.url
         ? `Primary link: ${article.links[0].url}`
         : null,
-      `Triggered by: ${triggeredBy}`,
       extraMessage || null,
       deviceText,
       `Dashboard: ${dashboardUrl}`,
     ].filter(Boolean);
 
     const htmlSections = [];
-    htmlSections.push(`<p><strong>${article.title}</strong></p>`);
+    htmlSections.push(`<p>Hello, here some news.</p>`);
+    htmlSections.push(`<p><strong>${escapeHtml(article.title)}</strong></p>`);
     if (description) {
-      htmlSections.push(`<p>${description}</p>`);
+      htmlSections.push(`<p>${escapeHtml(description)}</p>`);
     }
     if (Array.isArray(article.authors) && article.authors.length) {
       htmlSections.push(
@@ -1501,9 +1547,6 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
     }
     htmlSections.push(
       `<p><strong>Updated:</strong> ${escapeHtml(formattedTimestamp)}</p>`
-    );
-    htmlSections.push(
-      `<p><strong>Triggered by:</strong> ${escapeHtml(triggeredBy)}</p>`
     );
     if (article.links && article.links.length && article.links[0]?.url) {
       const linkUrl = escapeHtml(article.links[0].url);
@@ -1521,7 +1564,7 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
     htmlSections.push(
       `<p><a href="${escapeHtml(
         dashboardUrl
-      )}" target="_blank" rel="noopener">Open the guest dashboard</a></p>`
+      )}" target="_blank" rel="noopener">Open the dashboard</a></p>`
     );
 
     const mailResult = await sendMail({
@@ -1531,14 +1574,47 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
       html: htmlSections.join("\n"),
     });
 
+    const articles = getCollection("dashboard_articles");
+    const now = new Date();
+    const notificationState = buildNotificationState({
+      sent: true,
+      sent_at: now,
+      sent_by: triggeredBy,
+      sent_by_email: normalizeEmail(req.user?.email) || null,
+      sent_by_id: req.user?.id || null,
+      recipient_count: recipients.length,
+      subject,
+    });
+
+    await articles.updateOne(
+      { _id: articleDoc._id },
+      {
+        $set: {
+          notification_state: notificationState,
+          updated_at: now,
+          updated_by: req.user?.id || null,
+        },
+      }
+    );
+
+    articleDoc.notification_state = notificationState;
+    articleDoc.updated_at = now;
+    articleDoc.updated_by = req.user?.id || null;
+    const formattedArticle = formatArticleDoc(articleDoc, { req });
+
     res.json({
       success: true,
-      article: { id: article.id, title: article.title },
+      article: {
+        id: formattedArticle.id,
+        title: formattedArticle.title,
+        notification_state: formattedArticle.notification_state,
+      },
       sent_to: mailResult.to,
       cc: mailResult.cc || [],
       bcc: mailResult.bcc || [],
       message_id: mailResult.messageId || null,
       preview_url: mailResult.previewUrl || null,
+      recipient_count: recipients.length,
     });
   } catch (err) {
     console.error("Failed to send article notification", err);
@@ -1860,6 +1936,7 @@ router.post("/podcasts", requireAdmin, async (req, res) => {
       updated_at: now,
       created_by: req.user?.id || null,
       updated_by: req.user?.id || null,
+      notification_state: buildNotificationState(),
     };
 
     const podcasts = getCollection("dashboard_podcasts");
@@ -2000,7 +2077,18 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
         .json({ error: "Podcast audio is missing or invalid" });
     }
 
-    const recipients = getNotificationRecipients(req.body?.extraRecipients);
+    const existingNotification = formatNotificationState(
+      podcastDoc.notification_state
+    );
+    if (existingNotification.sent) {
+      return res
+        .status(409)
+        .json({ error: "Notification already sent for this podcast." });
+    }
+
+    const recipients = await getNotificationRecipients(
+      req.body?.extraRecipients
+    );
     if (!recipients.length) {
       return res
         .status(400)
@@ -2044,7 +2132,7 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
     const deviceText =
       alertType === "suspicious-device"
         ? "This notification has been marked as a suspicious device alert. If you did not initiate this change, please investigate immediately."
-        : "Share this update with guests and partners when ready.";
+        : "Share this update when you're ready.";
 
     const durationSeconds = Number(podcast.audio.duration_seconds);
     let durationLabel = null;
@@ -2072,20 +2160,21 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
     const downloadUrl = podcast.audio.download_url || podcast.audio.url;
 
     const textSections = [
+      "Hello, here some news.",
       `Episode: ${podcast.title}`,
       `Updated: ${formattedTimestamp}`,
       description ? `Summary: ${description}` : null,
       durationLabel ? `Duration: ${durationLabel}` : null,
       fileSizeLabel ? `File size: ${fileSizeLabel}` : null,
       downloadUrl ? `Audio: ${downloadUrl}` : null,
-      `Triggered by: ${triggeredBy}`,
       extraMessage || null,
       deviceText,
       `Dashboard: ${dashboardUrl}`,
     ].filter(Boolean);
 
     const htmlSections = [];
-    htmlSections.push(`<p><strong>${podcast.title}</strong></p>`);
+    htmlSections.push(`<p>Hello, here some news.</p>`);
+    htmlSections.push(`<p><strong>${escapeHtml(podcast.title)}</strong></p>`);
     if (description) {
       htmlSections.push(`<p>${escapeHtml(description)}</p>`);
     }
@@ -2110,9 +2199,6 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
         )}" target="_blank" rel="noopener">Listen or download the episode</a></p>`
       );
     }
-    htmlSections.push(
-      `<p><strong>Triggered by:</strong> ${escapeHtml(triggeredBy)}</p>`
-    );
     if (extraMessage) {
       htmlSections.push(`<p>${escapeHtml(extraMessage)}</p>`);
     }
@@ -2120,7 +2206,7 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
     htmlSections.push(
       `<p><a href="${escapeHtml(
         dashboardUrl
-      )}" target="_blank" rel="noopener">Open the guest dashboard</a></p>`
+      )}" target="_blank" rel="noopener">Open the dashboard</a></p>`
     );
 
     const mailResult = await sendMail({
@@ -2130,14 +2216,47 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
       html: htmlSections.join("\n"),
     });
 
+    const podcasts = getCollection("dashboard_podcasts");
+    const now = new Date();
+    const notificationState = buildNotificationState({
+      sent: true,
+      sent_at: now,
+      sent_by: triggeredBy,
+      sent_by_email: normalizeEmail(req.user?.email) || null,
+      sent_by_id: req.user?.id || null,
+      recipient_count: recipients.length,
+      subject,
+    });
+
+    await podcasts.updateOne(
+      { _id: podcastDoc._id },
+      {
+        $set: {
+          notification_state: notificationState,
+          updated_at: now,
+          updated_by: req.user?.id || null,
+        },
+      }
+    );
+
+    podcastDoc.notification_state = notificationState;
+    podcastDoc.updated_at = now;
+    podcastDoc.updated_by = req.user?.id || null;
+    const formattedPodcast = formatPodcastDoc(podcastDoc, { req });
+
     res.json({
       success: true,
-      podcast: { id: podcast.id, title: podcast.title },
+      podcast: {
+        id: formattedPodcast.id,
+        title: formattedPodcast.title,
+        notification_state: formattedPodcast.notification_state,
+      },
       sent_to: mailResult.to,
       cc: mailResult.cc || [],
       bcc: mailResult.bcc || [],
       message_id: mailResult.messageId || null,
       preview_url: mailResult.previewUrl || null,
+      recipient_count: recipients.length,
     });
   } catch (err) {
     console.error("Failed to send podcast notification", err);

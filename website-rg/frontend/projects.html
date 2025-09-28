@@ -5,26 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projects</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="images/rg-favicon.svg" type="image/svg+xml" />
     <script defer src="app.js"></script>
     <script defer>
       window.PAGE = "projects";
     </script>
   </head>
   <body>
-    <header class="topbar">
-      <h1>Small Company</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="members.html">Members</a>
-        <a href="dashboard.html" id="nav-dashboard" class="hidden">Dashboard</a>
-        <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
-        <a href="register.html" id="nav-register">Register</a>
-        <a href="login.html" id="nav-login">Login</a>
-        <a href="contact.html">Contact Us</a>
-        <button id="btn-logout" class="hidden">Logout</button>
-      </nav>
-    </header>
+    <section class="hero-parallax" aria-label="RG-FIDES project showcase">
+      <div class="hero-parallax__inner">
+        <header class="topbar topbar--hero">
+          <h1>Small Company</h1>
+          <nav>
+            <a href="index.html">Home</a>
+            <a href="projects.html" aria-current="page">Projects</a>
+            <a href="members.html">Members</a>
+            <a href="dashboard.html" id="nav-dashboard" class="hidden"
+              >Dashboard</a
+            >
+            <a href="admin.html" id="nav-admin" class="hidden">Admin</a>
+            <a href="register.html" id="nav-register">Register</a>
+            <a href="login.html" id="nav-login">Login</a>
+            <a href="contact.html">Contact Us</a>
+            <button id="btn-logout" class="hidden">Logout</button>
+          </nav>
+        </header>
+        <div class="hero-content">
+          <h2 class="org-name">RG-FIDES Project Library</h2>
+          <p class="hero-subtitle">
+            Explore the launches, data tooling, and creative experiments we ship
+            with our partners to move metrics and tell stories.
+          </p>
+        </div>
+      </div>
+    </section>
 
     <main class="container projects-page">
       <section class="projects-overview">
