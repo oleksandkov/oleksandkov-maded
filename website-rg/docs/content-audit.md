@@ -6,14 +6,14 @@ This document catalogs the user-facing copy, contact details, and external links
 
 ## Global Shared UI
 
-| Location                                      | Text / Value                                                                                     | Notes                                                                                          |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| Header brand (`frontend/*.html`)              | `RG-FIDES`                                                                                  | Appears as the site title in top navigation on every page.                                     |
+| Location                                      | Text / Value                                                                                        | Notes                                                                                          |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Header brand (`frontend/*.html`)              | `RG-FIDES`                                                                                          | Appears as the site title in top navigation on every page.                                     |
 | Navigation links (`frontend/*.html`)          | `Home`, `Projects`, `Team`, `Dashboard`, `Admin panel`, `Register`, `Login`, `Contact Us`, `Logout` | `Dashboard`, `Admin`, and `Logout` links are hidden until the user is authenticated.           |
-| Favicon (`frontend/*.html`)                   | `images/rg-favicon.svg`                                                                          | Update the SVG file or link to change.                                                         |
-| Footer text (`frontend/*.html`)               | `© {year} RG-FIDES`                                                                         | `{year}` is populated dynamically by JavaScript.                                               |
-| Footer external link (`frontend/*.html`)      | URL: `https://github.com/oleksandkov/oleksandkov-maded`<br/>Label: `GitHub`                      | Link opens in a new tab with accessible label "Open the Small Company GitHub repository".      |
-| Notification modal toggle (`frontend/app.js`) | "Enable content alerts" (button label)                                                           | Modal markup lives in `frontend/partials/notification-modal.html` and is injected when needed. |
+| Favicon (`frontend/*.html`)                   | `images/rg-favicon.svg`                                                                             | Update the SVG file or link to change.                                                         |
+| Footer text (`frontend/*.html`)               | `© {year} RG-FIDES`                                                                                 | `{year}` is populated dynamically by JavaScript.                                               |
+| Footer external link (`frontend/*.html`)      | URL: `https://github.com/oleksandkov/oleksandkov-maded`<br/>Label: `GitHub`                         | Link opens in a new tab with accessible label "Open the Small Company GitHub repository".      |
+| Notification modal toggle (`frontend/app.js`) | "Enable content alerts" (button label)                                                              | Modal markup lives in `frontend/partials/notification-modal.html` and is injected when needed. |
 
 ---
 
@@ -40,31 +40,34 @@ This document catalogs the user-facing copy, contact details, and external links
 
 ### "What we can do" Section
 
-- Intro: `From helping set a repository to creating a dashboard with deep analysis for better understanding data and preferences.`
+- Intro: `From helping to set a repository to creating a dashboard with deep analysis for better understanding data and preferences.`
 - Capability cards:
-  - **Insightful Dashboards** – `We turn complex datasets into clear stories with interactive dashboards, automated reports, and stakeholder-ready visuals.`
-    - Bullets: `Analytics audits and data modeling`, `Interactive dashboards in modern BI tools`, `Training sessions for internal teams`
-  - **Rapid Prototyping** – `Designers and engineers co-create clickable prototypes, proof of concepts, and MVPs that gather feedback fast.`
-    - Bullets: `User journey mapping and UX flows`, `Accessible component libraries`, `Deployment-ready starter kits`
-  - **Automation & Enablement** – `We streamline workflows with secure integrations, notification systems, and knowledge resources your teams can own.`
-    - Bullets: `Custom middleware and API wiring`, `Alerting, logging, and operations playbooks`, `Onboarding guides and enablement training`
+  - **Insightful Dashboards** – `We make data approachable by transforming complex information into interactive dashboards, clear reports, and visuals that help everyone understand the story behind the numbers.`
+  - **Rapid Prototyping** – `Our designers and engineers work side-by-side to quickly build prototypes, MVPs, and proof-of-concepts—so you can gather feedback and iterate fast.`
+    - Bullets: `Mapping user journeys and UX flows, Reusable, accessible component libraries, Starter kits ready for deployment`
+  - **Automation & Enablement** – `We simplify your workflows with secure integrations, smart notifications, and resources that empower your team to work independently.`
+    - Bullets: `Custom middleware and API connections, Alerting, logging, and operations guides, Onboarding materials and enablement sessions`
 
 ### About Us
 
-- Intro paragraph: `We are a multidisciplinary team of builders, analysts, and mentors who love turning bold ideas into polished experiences. From the first brainstorming sketch to the final deployment, we stay curious, share knowledge generously, and keep people at the center of every decision.`
-- Cards:
-  - **Mission** – `Empower learners and partners with practical tools, transparent processes, and mentorship that sparks long-term growth.`
-  - **Culture** – `We foster open collaboration and celebrate diverse voices. Weekly stand-ups keep everyone aligned, while demo days showcase wins and lessons learned.`
-  - **Focus** – `Our projects span data storytelling, web engineering, and community education. Each initiative blends research, design, and hands-on experimentation.`
-- Highlights:
-  - `Weekly Learning Labs` – `Interactive sessions where teammates workshop new tech, build prototypes, and give live feedback.`
-  - `Open Resource Library` – `Curated templates, starter kits, and playbooks maintained by the group to help newcomers ramp up quickly.`
-  - `Mentorship Network` – `A rotating roster of mentors pairs with members to set goals, review progress, and unlock new opportunities.`
+- Intro paragraph: `We are a close-knit team of engineers, strategists, and researchers who thrive on building unique products with the latest AI models. Every project is a collaboration—ideas are shared openly, and everyone contributes from first sketch to final launch. We value curiosity, practical results, and keeping people at the heart of our work.`
+
+Cards:
+
+- **Mission** – `Deliver practical, innovative solutions by combining technical expertise with a passion for learning and growth.`
+- **Culture** – `We believe in open communication, fast feedback, and supporting each other. Our process is transparent, and every member’s voice matters.`
+- **Focus** – `From data analysis to web engineering, we blend research, design, and hands-on experimentation to create products that make a difference.`
+
+Highlights:
+
+- `Team Sprints` – `We work in focused bursts, sharing progress and solving challenges together in real time.`
+- `Resource Sharing` – `Templates, starter kits, and guides are available to help everyone ramp up quickly and contribute effectively.`
+- `Peer Mentoring` – `Team members regularly pair up to set goals, review work, and help each other grow.`
 
 ### Portfolio Previews
 
-- Section heading: `Public View`
-- Description: `Explore our open portfolio and meet the people behind the work. The Members area highlights detailed bios, focus areas, and contact points for every core team lead.`
+- Section heading: `Meet us`
+- Description: `Explore detailed biographies about each member of our team. Check our skills, roles and contact details to get in touch.`
 - Button: `Meet the team`
 - Placeholder headings (no static copy shown): `Latest Projects`, `Members`, `Documents`
 
@@ -74,10 +77,10 @@ This document catalogs the user-facing copy, contact details, and external links
 - Heading: `Contact Us`
 - Intro: `Have a question, collaboration idea, or press inquiry? Reach out to the right channel and our team will follow up within one business day.`
 - Cards:
-  - **Email** – `General inquiries, partnerships, and speaking invitations.`<br/>Link: `mailto:hello@smallcompany.org`
-  - **GitHub** – `Explore our repositories, contribute code, and follow project updates.`<br/>Link: `https://github.com/smallcompany`
-  - **LinkedIn** – `Connect with the team, stay informed about events, and grow together.`<br/>Link: `https://linkedin.com/company/smallcompany`
-- CTA button: `Start a Conversation`
+  - **Email** – `General inquiries, partnerships, and speaking invitations.`<br/>Link: `oleksandr.kov.dm@gmail.com`
+  - **GitHub** – `Explore our philosophy, AI communication rules and our political stance.`<br/>Link: `https://github.com/RG-FIDES/rg-fides`
+  - **LinkedIn** – `Not available now`<br/> Link: --
+- CTA button: `Write an email`
 
 ---
 
