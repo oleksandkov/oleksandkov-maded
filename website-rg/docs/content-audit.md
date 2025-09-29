@@ -95,10 +95,10 @@ Highlights:
 
 ## Members (`frontend/members.html`)
 
-- Hero subheading: `Public insight into the people shaping our products and culture.`
-- Section heading: `Public View`
-- Description: `Discover the leaders behind Small Company. This page provides a public-friendly snapshot of each team member, their focus areas, and open contact channels so partners can easily reach the right expert.`
-- `Team Highlights` lead paragraph: `A quick glance at the strengths and voices that make us who we are.`
+- Hero subheading: `Explore our portfolios to get more information about us, our works and our skills.`
+- Section heading: `Note`
+- Description: `Discover the leaders behind RG-FIDES..`
+- `Team Highlights` lead paragraph: `Take a look a quick insight about us.`
 - `Detailed Profiles` heading (content populated dynamically).
 
 ---
@@ -108,13 +108,13 @@ Highlights:
 ### Hero
 
 - Heading: `We'd love to hear from you`
-- Subheading: `Share your ideas, request a collaboration, or ask the crew a question. We'll follow up within one business day.`
+- Subheading: `Conctact with the team leader to get answers to your questions, discuss collaboration ideas, or explore partnership opportunities.`
 
 ### Contact Form
 
 - Badge: `Reach the team`
-- Heading: `Write us a message`
-- Instruction: `Use the form below to draft your email. When you hit send, your preferred email app will open with all the details ready to go to hello@smallcompany.org.`
+- Heading: `Write an email`
+- Instruction: `Email will be send to the team member who is responsible for communication.`
 - Field labels & placeholders:
   - `Your Name` – placeholder `Jane Doe`
   - `Your Email` – placeholder `you@example.com`
@@ -127,9 +127,9 @@ Highlights:
 - Badge: `Direct channels`
 - Heading: `Prefer another route?`
 - Cards:
-  - **GitHub** – `Open issues, share improvements, and track our releases.`<br/>Link: `https://github.com/smallcompany`
+  - **GitHub** – `Check our Github to get involved with our projects and philosophy.`<br/>Link: `https://github.com/smallcompany`
   - **LinkedIn** – `Connect with us professionally and follow team announcements.`<br/>Link: `https://linkedin.com/company/smallcompany`
-  - **Phone** – `Need to talk live? Call us Monday–Friday, 10:00–17:00 (EET).`<br/>Number: `+380 (44) 123-45-67`
+  - **Phone** – `Need to talk live?`<br/>Number: `+380931077400`
 
 ### Form Notification Messages (`frontend/contact.html` script)
 
@@ -149,14 +149,14 @@ Highlights:
 - Labels: `Email`, `Password`
 - Submit button text: `Login`
 - Error placeholder text: `New here? Create a guest account.` (link label)
-- Aside badge: `Team portal`
+- Aside badge: `Benefits`
 - Aside heading: `Keep your initiatives energized`
-- Aside paragraph: `Access the internal dashboard, publish new case studies, and stay in sync with the crew wherever you’re working from.`
+- Aside paragraph: `Login to get more options to use on the website`
 - Feature bullets:
-  - `Lightning launches` – `Spin up fresh project showcases with streamlined templates.`
+  - `Wide range of tools` – `Get more resources to use made by team members.`
   - `Secure access` – `Keep sensitive briefs and documents in a protected workspace.`
   - `Aligned teams` – `Collaborate with members, capture updates, and celebrate wins.`
-- Stats: `120+ Projects shipped`, `24/7 Global access`
+- Stats: `2+ Projects`, `24/7 Global access`
 
 ---
 
@@ -164,19 +164,19 @@ Highlights:
 
 - Badge: `Guest access`
 - Heading: `Create an account`
-- Subtitle: `Join the extended Small Company crew to get curated updates and early previews.`
+- Subtitle: `Join the our community.`
 - Field labels: `First Name`, `Last Name`, `Email`, `Password`, `Confirm Password`
 - Submit button: `Create account`
 - Success messaging placeholders (hidden by default): `register-success`, `Resend verification email`
 - Hint: `Already have an account? Log in here.`
 - Aside badge: `Why join?`
 - Aside heading: `Be the first to explore what’s next`
-- Aside paragraph: `Unlock private previews, early prototypes, and curated updates from our delivery teams.`
+- Aside paragraph: `Unlock exclusive content, personalized recommendations, and curated insights from our team.`
 - Feature bullets:
-  - `Exclusive releases` – `Peek behind the curtain before projects become public.`
-  - `Curated insights` – `Receive quarterly roundups and lessons learned from our squads.`
-  - `Personalized picks` – `Select topics you care about and get tailored recommendations.`
-- Stats: `4.9★ Guest satisfaction`, `2k+ Community members`
+  - `Early access to new tools` – `Try out dashboards, starter kits, and prototypes before public release.`
+  - `Team insights` – `Get updates on our latest experiments, lessons learned, and practical guides from the RG-FIDES crew.`
+  - `Personalized recommendations` – `Choose your interests and receive curated content and project highlights relevant to you.`
+- Stats: `Multinational`, `Experienced Team`, `Innovative Projects`
 
 ---
 
@@ -275,37 +275,40 @@ Highlights:
 
 ### Seeded Team Member Profiles
 
-1. **Oleksandr Kovalenko**
+1. **Oleksandr Koval**
 
-   - Role: `Lead Engineer`
-   - Review: `Oleksandr brings a calm leadership style and an eye for scalable architecture. He keeps the team moving forward with clarity.`
-   - Bio: `Over a decade of experience building resilient cloud platforms for logistics, finance, and civic-tech organizations.`
-   - Tenure: `Joined 2018`
-   - Focus Areas: `Platform Architecture`, `Security Reviews`, `Tech Mentoring`
-   - Location: `Kyiv, Ukraine`
+   - Role: `Technical Lead`
+   - Review: `Oleksandr is the backbone of our technical strategy. His deep expertise ensures our platforms are robust, scalable, and secure.`
+   - Bio: `Ukrainian student who has a passion for technology and innovation. Has experience in web development and cloud computing. Created a full-stack project like this website. Has some knowledge in machine learning, graph building, R and C++`
+   - Tenure: `Joined 2025`
+   - Focus Areas: `Platform Architecture`, `Cloud Transferring`, `AI Integration`
+   - Location: `Vinnytsia, Ukraine`
    - Email: `muaronok@gmail.com`
-   - LinkedIn: `https://www.linkedin.com/in/oleksandr`
+   - LinkedIn: `https://www.linkedin.com/in/oleksandr-koval-932015384/`
+   - GitHub: `https://github.com/oleksandkov`
+   - Website: `https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/website/index.html`
 
-2. **Mariana Danyliuk**
+2. **Halyna Liubchych**
 
    - Role: `Product Strategist`
-   - Review: `Mariana translates customer voices into actionable plans. Her roadmaps balance ambition with realistic delivery timelines.`
-   - Bio: `Former startup founder turned product leader focused on inclusive digital experiences for public services.`
-   - Tenure: `Joined 2020`
-   - Focus Areas: `Vision & Roadmaps`, `Stakeholder Facilitation`, `Impact Reporting`
-   - Location: `Lviv, Ukraine`
-   - Email: `mariana@smallco.com`
-   - LinkedIn: `https://www.linkedin.com/in/mariana`
+   - Review: `Halyna translates customer voices into actionable plans. Her roadmaps balance ambition with realistic delivery timelines. `
 
-3. **Taras Hrytsenko**
+- Bio: `Ukrainian experienced book redactor with a strong background in editing and publishing. Halyna brings a keen eye for detail and a passion for clear, impactful communication to every project.`
+- Tenure: `Joined 2025`
+- Focus Areas: `Vision & Roadmaps`, `Stakeholder Facilitation`, `Impact Reporting`
+- Location: `Kyiv, Ukraine`
+- Email: `galina.lubchich@gmail.com`
+- LinkedIn: `https://www.linkedin.com/in/halyna-liubchych-9a255353/`
+
+3. **Andriy Koval**
    - Role: `UX Researcher`
-   - Review: `Taras champions empathy in every workshop. The result is a product experience that feels intuitive and genuinely human.`
-   - Bio: `Researcher and service designer who has delivered evidence-based UX improvements across healthcare and education platforms.`
-   - Tenure: `Joined 2019`
+   - Review: `Andriy is an experienced data analyst. Worked in a field of Ai learing and data science. Have experience in R over 5 years. Strone knowledge of statistics and mathematics.`
+   - Bio: `Ukrainian data analyst with a strong background in statistics and mathematics. Andriy brings a methodical approach to problem-solving and a passion for uncovering insights from complex datasets.`
+   - Tenure: `Joined 2025`
    - Focus Areas: `Field Studies`, `Service Blueprints`, `Accessibility Audits`
-   - Location: `Odesa, Ukraine`
-   - Email: `taras@smallco.com`
-   - LinkedIn: `https://www.linkedin.com/in/taras`
+   - Location: `Edmonton, Canada`
+   - Email: `andriy.koval@gov.ab.ca`
+   - LinkedIn: `https://www.linkedin.com/in/andriy-v-koval/`
 
 ### Key Notification & Status Messages
 
@@ -376,14 +379,14 @@ User-facing API responses originate in Express routes and may surface in the UI.
 
 ## Contact Information Summary
 
-| Type               | Value                                                            | Source                                         |
-| ------------------ | ---------------------------------------------------------------- | ---------------------------------------------- |
-| General email      | `hello@smallcompany.org`                                         | `frontend/index.html`, `frontend/contact.html` |
-| Team member emails | `muaronok@gmail.com`, `mariana@smallco.com`, `taras@smallco.com` | `frontend/app.js`                              |
-| Phone              | `+380 (44) 123-45-67`                                            | `frontend/contact.html`                        |
-| GitHub (org)       | `https://github.com/smallcompany`                                | `frontend/index.html`, `frontend/contact.html` |
-| LinkedIn           | `https://linkedin.com/company/smallcompany`                      | `frontend/index.html`, `frontend/contact.html` |
-| Repository link    | `https://github.com/oleksandkov/oleksandkov-maded`               | Footer across pages                            |
+| Type               | Value                                                                       | Source                                         |
+| ------------------ | --------------------------------------------------------------------------- | ---------------------------------------------- |
+| General email      | `hello@smallcompany.org`                                                    | `frontend/index.html`, `frontend/contact.html` |
+| Team member emails | `muaronok@gmail.com`, `galina.lubchich@gmail.com`, `andriy.koval@gov.ab.ca` | `frontend/app.js`                              |
+| Phone              | `+380 (44) 123-45-67`                                                       | `frontend/contact.html`                        |
+| GitHub (org)       | `https://github.com/RG-FIDES/rg-fides`                                      | `frontend/index.html`, `frontend/contact.html` |
+| LinkedIn           | `https://linkedin.com/company/smallcompany`                                 | `frontend/index.html`, `frontend/contact.html` |
+| Repository link    | `https://github.com/oleksandkov/oleksandkov-maded`                          | Footer across pages                            |
 
 ---
 
