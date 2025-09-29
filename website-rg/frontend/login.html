@@ -12,9 +12,28 @@
     </script>
   </head>
   <body class="auth-body page-login">
-    <header class="topbar">
-      <h1>Small Company</h1>
-      <nav>
+    <header class="topbar" data-menu-open="false">
+      <div class="topbar__brand">
+        <h1><a href="index.html">Small Company</a></h1>
+        <button
+          type="button"
+          class="topbar__toggle"
+          aria-expanded="false"
+          aria-controls="site-navigation"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span class="topbar__toggle-box" aria-hidden="true">
+            <span class="topbar__toggle-line"></span>
+            <span class="topbar__toggle-line"></span>
+            <span class="topbar__toggle-line"></span>
+          </span>
+        </button>
+      </div>
+      <nav
+        id="site-navigation"
+        class="topbar__nav"
+        aria-label="Primary navigation"
+      >
         <a href="index.html">Home</a>
         <a href="projects.html">Projects</a>
         <a href="members.html">Members</a>
@@ -23,7 +42,7 @@
         <a href="register.html" id="nav-register">Register</a>
         <a href="login.html" id="nav-login">Login</a>
         <a href="contact.html">Contact Us</a>
-        <button id="btn-logout" class="hidden">Logout</button>
+        <button id="btn-logout" class="hidden" type="button">Logout</button>
       </nav>
     </header>
 
