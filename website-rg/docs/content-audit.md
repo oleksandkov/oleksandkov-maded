@@ -21,15 +21,15 @@ This document catalogs the user-facing copy, contact details, and external links
 
 ### Hero
 
-- Heading: `Small Company`
-- Subheading: `We design and launch thoughtful products with teams that care about craft, clarity, and community impact.`
-- Primary CTA button: `See our work`
-- Secondary CTA button: `Talk with us`
+- Heading: `RG-FIDES`
+- Subheading: `We are the agency that create an unique products coopereted with the latest AI modals`
+- Primary CTA button: `Check products`
+- Secondary CTA button: `Meet the team`
 
 ### Welcome Section
 
-- Heading: `Welcome to Small Company`
-- Body copy: `We're a collaborative studio of builders, researchers, and mentors crafting human-centered products. Peek into our work, meet the people behind it, and see how we can support your next initiative.`
+- Heading: `Hi there,`
+- Body copy: `Welcome to our private website, here you can meet our team, see our projects and view our works where you can find useful courses, articles and much more information`
 - Buttons: `Explore projects`, `Meet our team`
 
 #### Highlights
