@@ -40,7 +40,7 @@ This document catalogs the user-facing copy, contact details, and external links
 
 ### "What we can do" Section
 
-- Intro: `From planning to launch, we help teams ship polished digital experiences. Explore a few ways we partner with organizations.`
+- Intro: `From helping set a repository to creating a dashboard with deep analysis for better understanding data and preferences.`
 - Capability cards:
   - **Insightful Dashboards** – `We turn complex datasets into clear stories with interactive dashboards, automated reports, and stakeholder-ready visuals.`
     - Bullets: `Analytics audits and data modeling`, `Interactive dashboards in modern BI tools`, `Training sessions for internal teams`
