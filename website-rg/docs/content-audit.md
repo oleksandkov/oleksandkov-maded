@@ -34,9 +34,9 @@ This document catalogs the user-facing copy, contact details, and external links
 
 #### Highlights
 
-1. **Curated playbooks** – `Reusable templates, guides, and tooling to accelerate delivery.`
-2. **Transparent workflow** – `Follow our pipeline from idea to launch with clear milestones.`
-3. **Community support** – `Office hours, workshops, and mentorship designed for real teams.`
+1. **High productivity** – `Our team works fast but do not bad. All processes is disrupted among all members of a team`
+2. **High standarts** – `All projects have a few stages of development (from analysis to creating a dashboard), it allows to keep all standarts on the top of the heel`
+3. **Quick feedback** – `We communicate with the customer all the time, to do exactly whet you want`
 
 ### "What we can do" Section
 
