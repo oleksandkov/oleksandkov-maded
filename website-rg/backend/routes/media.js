@@ -1,6 +1,7 @@
 import express from "express";
 import { Readable } from "stream";
 import { getObjectStream } from "../utils/storage.js";
+import { userMessage } from "../utils/userMessages.js";
 
 const router = express.Router();
 
@@ -46,7 +47,7 @@ router.get("/", async (req, res) => {
   const keyRaw = typeof req.query.key === "string" ? req.query.key : "";
   const key = keyRaw.trim();
   if (!key) {
-    return res.status(400).json({ error: "Missing storage key" });
+    return res.status(400).json({ error: userMessage("storageKeyRequired") });
   }
 
   const wantDownload =
@@ -94,7 +95,7 @@ router.get("/", async (req, res) => {
     } catch (streamError) {
       console.error("Media stream error", streamError);
       if (!res.headersSent) {
-        res.status(500).json({ error: "Streaming error" });
+        res.status(500).json({ error: userMessage("mediaStreamFailed") });
       } else {
         res.end();
       }
@@ -102,10 +103,10 @@ router.get("/", async (req, res) => {
   } catch (error) {
     const statusCode = error?.$metadata?.httpStatusCode;
     if (statusCode === 404 || error?.name === "NoSuchKey") {
-      return res.status(404).json({ error: "Media not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
     console.error("Failed to proxy media", error);
-    res.status(500).json({ error: "Failed to load media" });
+    res.status(500).json({ error: userMessage("mediaStreamFailed") });
   }
 });
 

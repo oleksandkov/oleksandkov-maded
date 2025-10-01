@@ -5,6 +5,7 @@ import { normalizeTeamMembers } from "../utils/teamMembers.js";
 import { getContactsForMembers } from "../utils/teamDirectory.js";
 import { isMailConfigured, sendMail } from "../utils/mailer.js";
 import { buildEventEmailTemplate } from "../utils/eventTemplate.js";
+import { userMessage } from "../utils/userMessages.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
@@ -75,18 +76,19 @@ function normalizeDurationMinutes(value, fallback = 60) {
 function requireAuth(req, res, next) {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  if (!token) return res.status(401).json({ error: "Missing token" });
+  if (!token)
+    return res.status(401).json({ error: userMessage("missingToken") });
   try {
     req.user = jwt.verify(token, JWT_SECRET);
     next();
   } catch (e) {
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: userMessage("invalidToken") });
   }
 }
 
 function requireAdmin(req, res, next) {
   if (req.user?.role !== "admin") {
-    return res.status(403).json({ error: "Admin only" });
+    return res.status(403).json({ error: userMessage("adminOnly") });
   }
   next();
 }
@@ -143,7 +145,9 @@ router.get("/", requireAuth, requireAdmin, async (req, res) => {
     res.json({ events: result.map(formatEventDoc) });
   } catch (err) {
     console.error("Failed to load events", err);
-    res.status(500).json({ error: "Database error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
@@ -158,15 +162,15 @@ router.post("/", requireAuth, requireAdmin, async (req, res) => {
       duration_minutes,
     } = req.body;
     if (!title) {
-      return res.status(400).json({ error: "Title is required" });
+      return res.status(400).json({ error: userMessage("eventTitleRequired") });
     }
     if (!start_at) {
-      return res.status(400).json({ error: "Start date and time required" });
+      return res.status(400).json({ error: userMessage("startDateRequired") });
     }
 
     const startDate = new Date(start_at);
     if (Number.isNaN(startDate.getTime())) {
-      return res.status(400).json({ error: "Invalid start date" });
+      return res.status(400).json({ error: userMessage("invalidStartDate") });
     }
 
     const durationMinutes = normalizeDurationMinutes(duration_minutes, 60);
@@ -193,7 +197,9 @@ router.post("/", requireAuth, requireAdmin, async (req, res) => {
       .json({ event: formatEventDoc({ ...doc, _id: result.insertedId }) });
   } catch (err) {
     console.error("Event creation failed", err);
-    res.status(500).json({ error: "Database error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
@@ -221,21 +227,22 @@ router.delete("/:id", requireAuth, requireAdmin, async (req, res) => {
     }
 
     if (!deleted) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ success: true });
   } catch (err) {
     console.error("Failed to delete event", err);
-    res.status(500).json({ error: "Database error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
 router.post("/:id/send", requireAuth, requireAdmin, async (req, res) => {
   if (!isMailConfigured()) {
     return res.status(503).json({
-      error:
-        "Email service is not configured. Please set SMTP_HOST and MAIL_FROM environment variables.",
+      error: userMessage("emailServiceUnavailable"),
     });
   }
 
@@ -244,7 +251,7 @@ router.post("/:id/send", requireAuth, requireAdmin, async (req, res) => {
     const doc = await findEventDocument(id);
 
     if (!doc) {
-      return res.status(404).json({ error: "Event not found" });
+      return res.status(404).json({ error: userMessage("eventNotFound") });
     }
 
     const event = formatEventDoc(doc);
@@ -273,9 +280,10 @@ router.post("/:id/send", requireAuth, requireAdmin, async (req, res) => {
     const uniqueRecipients = dedupeEmails(candidateRecipients);
 
     if (!uniqueRecipients.length) {
-      return res
-        .status(400)
-        .json({ error: "No email addresses found for this event" });
+      return res.status(400).json({
+        error: userMessage("noEmailAddresses"),
+        details: missing?.length ? { missing } : undefined,
+      });
     }
 
     const finalSubject = req.body?.subject?.trim()
@@ -338,7 +346,7 @@ router.post("/:id/send", requireAuth, requireAdmin, async (req, res) => {
         ? err.statusCode
         : 500;
     res.status(status).json({
-      error: "Failed to send event invites",
+      error: userMessage("eventSendFailed"),
       details: err?.message || null,
       code: err?.code || null,
       response: err?.response || null,

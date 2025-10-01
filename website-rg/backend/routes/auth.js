@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import { getCollection, toObjectId } from "../db.js";
 import { sendMail, isMailConfigured } from "../utils/mailer.js";
+import { userMessage } from "../utils/userMessages.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
@@ -197,7 +198,9 @@ router.post("/register", async (req, res) => {
     const { email, password, role, name, surname } = req.body;
     const normalizedEmail = normalizeEmail(email);
     if (!normalizedEmail || !password)
-      return res.status(400).json({ error: "Email and password required" });
+      return res
+        .status(400)
+        .json({ error: userMessage("emailAndPasswordRequired") });
 
     const passwordHash = bcrypt.hashSync(password, 10);
     const roleInput = typeof role === "string" ? role.trim().toLowerCase() : "";
@@ -216,7 +219,7 @@ router.post("/register", async (req, res) => {
     ]);
 
     if (existingUser || existingGuest) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: userMessage("userExists") });
     }
 
     const result = await users.insertOne({
@@ -243,9 +246,9 @@ router.post("/register", async (req, res) => {
     });
   } catch (err) {
     if (err?.code === 11000) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: userMessage("userExists") });
     }
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -258,7 +261,7 @@ router.post("/register/guest", async (req, res) => {
 
     if (!firstName || !lastName || !normalizedEmail || !password) {
       return res.status(400).json({
-        error: "Name, surname, email, and password are required",
+        error: userMessage("nameSurnameEmailPasswordRequired"),
       });
     }
 
@@ -271,14 +274,13 @@ router.post("/register/guest", async (req, res) => {
     ]);
 
     if (existingUser || existingGuest) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: userMessage("userExists") });
     }
 
     if (!isMailConfigured()) {
-      return res.status(503).json({
-        error:
-          "Email verification is currently unavailable. Please contact the site administrator.",
-      });
+      return res
+        .status(503)
+        .json({ error: userMessage("verificationUnavailable") });
     }
 
     const passwordHash = bcrypt.hashSync(password, 10);
@@ -317,10 +319,9 @@ router.post("/register/guest", async (req, res) => {
     } catch (mailErr) {
       console.error("Failed to send guest verification email", mailErr);
       await guests.deleteOne({ _id: guestInsert.insertedId });
-      return res.status(500).json({
-        error:
-          "We couldn't send the verification email. Please try again later.",
-      });
+      return res
+        .status(500)
+        .json({ error: userMessage("verificationUnavailable") });
     }
 
     const responsePayload = {
@@ -338,9 +339,9 @@ router.post("/register/guest", async (req, res) => {
   } catch (err) {
     console.error("Guest registration failed", err);
     if (err?.code === 11000) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: userMessage("userExists") });
     }
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -349,7 +350,9 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const normalizedEmail = normalizeEmail(email);
     if (!normalizedEmail || !password)
-      return res.status(400).json({ error: "Email and password required" });
+      return res
+        .status(400)
+        .json({ error: userMessage("emailAndPasswordRequired") });
 
     const usersCollection = getCollection(USERS_COLLECTION);
     const guests = getCollection(GUEST_COLLECTION);
@@ -362,10 +365,12 @@ router.post("/login", async (req, res) => {
       origin = user ? "guest" : origin;
     }
 
-    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    if (!user)
+      return res.status(401).json({ error: userMessage("invalidCredentials") });
 
     const ok = bcrypt.compareSync(password, user.password_hash);
-    if (!ok) return res.status(401).json({ error: "Invalid credentials" });
+    if (!ok)
+      return res.status(401).json({ error: userMessage("invalidCredentials") });
 
     if (origin === "guest") {
       const isVerified =
@@ -463,7 +468,7 @@ router.post("/login", async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -474,7 +479,7 @@ router.get("/verify/guest", async (req, res) => {
     if (!token) {
       return res.status(400).json({
         success: false,
-        error: "Missing verification token.",
+        error: userMessage("missingToken"),
         code: "TOKEN_MISSING",
       });
     }
@@ -484,7 +489,7 @@ router.get("/verify/guest", async (req, res) => {
     if (!guest) {
       return res.status(404).json({
         success: false,
-        error: "Verification link is invalid or has already been used.",
+        error: userMessage("verificationInvalid"),
         code: "TOKEN_INVALID",
       });
     }
@@ -505,8 +510,7 @@ router.get("/verify/guest", async (req, res) => {
     if (expiresAt && now.getTime() > expiresAt.getTime()) {
       return res.status(410).json({
         success: false,
-        error:
-          "Verification link has expired. Please request a new one from the login page.",
+        error: userMessage("verificationExpired"),
         code: "TOKEN_EXPIRED",
       });
     }
@@ -534,7 +538,9 @@ router.get("/verify/guest", async (req, res) => {
     });
   } catch (err) {
     console.error("Guest email verification failed", err);
-    res.status(500).json({ success: false, error: "Verification failed" });
+    res
+      .status(500)
+      .json({ success: false, error: userMessage("verificationFailed") });
   }
 });
 
@@ -544,13 +550,13 @@ router.post("/verify/guest/resend", async (req, res) => {
     if (!email) {
       return res
         .status(400)
-        .json({ success: false, error: "Email is required." });
+        .json({ success: false, error: userMessage("emailRequired") });
     }
 
     if (!isMailConfigured()) {
       return res.status(503).json({
         success: false,
-        error: "Email delivery is not configured right now.",
+        error: userMessage("emailServiceUnavailable"),
       });
     }
 
@@ -628,21 +634,22 @@ router.post("/verify/guest/resend", async (req, res) => {
     console.error("Failed to resend guest verification email", err);
     res
       .status(500)
-      .json({ success: false, error: "Could not resend verification email." });
+      .json({ success: false, error: userMessage("verificationUnavailable") });
   }
 });
 
 router.get("/me", async (req, res) => {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  if (!token) return res.status(401).json({ error: "Missing token" });
+  if (!token)
+    return res.status(401).json({ error: userMessage("missingToken") });
 
   try {
     const payload = jwt.verify(token, JWT_SECRET);
 
     const userId = toObjectId(payload.id);
     if (!userId) {
-      return res.status(400).json({ error: "Invalid user id" });
+      return res.status(400).json({ error: userMessage("invalidUserId") });
     }
 
     const origin =
@@ -661,7 +668,8 @@ router.get("/me", async (req, res) => {
       }
     );
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user)
+      return res.status(404).json({ error: userMessage("userNotFound") });
     const resolvedRole =
       inferredOrigin === "guest"
         ? "guest"
@@ -684,20 +692,21 @@ router.get("/me", async (req, res) => {
       },
     });
   } catch (e) {
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: userMessage("invalidToken") });
   }
 });
 
 router.patch("/me/notifications", async (req, res) => {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  if (!token) return res.status(401).json({ error: "Missing token" });
+  if (!token)
+    return res.status(401).json({ error: userMessage("missingToken") });
 
   try {
     const payload = jwt.verify(token, JWT_SECRET);
     const userId = toObjectId(payload.id);
     if (!userId) {
-      return res.status(400).json({ error: "Invalid user id" });
+      return res.status(400).json({ error: userMessage("invalidUserId") });
     }
 
     const origin =
@@ -718,7 +727,9 @@ router.patch("/me/notifications", async (req, res) => {
       : req.body?.notification_opt_in;
 
     if (requestProvidedValue === undefined) {
-      return res.status(400).json({ error: "Missing enabled value" });
+      return res
+        .status(400)
+        .json({ error: userMessage("missingEnabledValue") });
     }
 
     const enabled = parseNotificationPreference(requestProvidedValue, true);
@@ -741,7 +752,7 @@ router.patch("/me/notifications", async (req, res) => {
         : null;
 
     if (!updatedDocument) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: userMessage("userNotFound") });
     }
 
     const permissions = normalizePermissions(updatedDocument.permissions || []);
@@ -753,10 +764,10 @@ router.patch("/me/notifications", async (req, res) => {
     });
   } catch (err) {
     if (err?.name === "JsonWebTokenError") {
-      return res.status(401).json({ error: "Invalid token" });
+      return res.status(401).json({ error: userMessage("invalidToken") });
     }
     console.error("Failed to update notification preference", err);
-    res.status(500).json({ error: "Failed to update notification preference" });
+    res.status(500).json({ error: userMessage("notificationUpdateFailed") });
   }
 });
 

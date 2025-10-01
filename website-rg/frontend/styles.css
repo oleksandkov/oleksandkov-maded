@@ -5097,6 +5097,10 @@ button#upload-btn:focus-visible,
   gap: 16px;
 }
 
+.auth-stats--three > div {
+  text-align: center;
+}
+
 .auth-stat-number {
   display: block;
   font-size: 1.35rem;

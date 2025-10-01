@@ -12,6 +12,7 @@ import {
   buildMediaProxyPath,
   deleteFromR2,
 } from "../utils/storage.js";
+import { userMessage } from "../utils/userMessages.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
@@ -35,7 +36,7 @@ const articleImageUpload = createUpload({
     if (allowed.test(file.originalname)) {
       cb(null, true);
     } else {
-      cb(new Error("Invalid image type. Allowed: PNG, JPG, JPEG, GIF, WEBP"));
+      cb(new Error(userMessage("projectImageType")));
     }
   },
 });
@@ -48,11 +49,7 @@ const articleAttachmentUpload = createUpload({
     if (allowed.test(file.originalname)) {
       cb(null, true);
     } else {
-      cb(
-        new Error(
-          "Invalid attachment type. Allowed: PDF, DOC, DOCX, TXT, PNG, JPG, JPEG, GIF, ZIP, RAR, PPT, PPTX"
-        )
-      );
+      cb(new Error(userMessage("documentFileType")));
     }
   },
 });
@@ -63,9 +60,7 @@ const articleAudioUpload = createUpload({
     if (AUDIO_FILE_REGEX.test(file.originalname)) {
       cb(null, true);
     } else {
-      cb(
-        new Error("Invalid audio type. Allowed: MP3, WAV, OGG, M4A, AAC, FLAC")
-      );
+      cb(new Error(userMessage("audioFileType")));
     }
   },
 });
@@ -76,9 +71,7 @@ const podcastAudioUpload = createUpload({
     if (AUDIO_FILE_REGEX.test(file.originalname)) {
       cb(null, true);
     } else {
-      cb(
-        new Error("Invalid audio type. Allowed: MP3, WAV, OGG, M4A, AAC, FLAC")
-      );
+      cb(new Error(userMessage("audioFileType")));
     }
   },
 });
@@ -86,18 +79,19 @@ const podcastAudioUpload = createUpload({
 function requireAuth(req, res, next) {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  if (!token) return res.status(401).json({ error: "Missing token" });
+  if (!token)
+    return res.status(401).json({ error: userMessage("missingToken") });
   try {
     req.user = jwt.verify(token, JWT_SECRET);
     next();
   } catch (e) {
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: userMessage("invalidToken") });
   }
 }
 
 function requireAdmin(req, res, next) {
   if (req.user?.role !== "admin") {
-    return res.status(403).json({ error: "Admin only" });
+    return res.status(403).json({ error: userMessage("adminOnly") });
   }
   next();
 }
@@ -121,7 +115,7 @@ function hasPublishingAccess(user) {
 
 function requirePublisher(req, res, next) {
   if (!hasPublishingAccess(req.user)) {
-    return res.status(403).json({ error: "Admin only" });
+    return res.status(403).json({ error: userMessage("adminOnly") });
   }
   return next();
 }
@@ -678,7 +672,7 @@ async function enrichAttachmentsWithDocuments(attachments = []) {
 function sanitizeArticleCreatePayload(payload = {}) {
   const title = typeof payload.title === "string" ? payload.title.trim() : "";
   if (!title) {
-    throw new Error("Title is required");
+    throw new Error(userMessage("titleRequired"));
   }
   const description =
     typeof payload.description === "string" ? payload.description.trim() : "";
@@ -726,7 +720,7 @@ function sanitizeArticleUpdatePayload(payload = {}) {
   if (Object.prototype.hasOwnProperty.call(payload, "title")) {
     const title = typeof payload.title === "string" ? payload.title.trim() : "";
     if (!title) {
-      throw new Error("Title is required");
+      throw new Error(userMessage("titleRequired"));
     }
     update.title = title;
   }
@@ -1163,14 +1157,14 @@ function sanitizePodcastAudio(audio = {}) {
 function sanitizePodcastCreatePayload(payload = {}) {
   const title = typeof payload.title === "string" ? payload.title.trim() : "";
   if (!title) {
-    throw new Error("Title is required");
+    throw new Error(userMessage("titleRequired"));
   }
   const description =
     typeof payload.description === "string" ? payload.description.trim() : "";
   const authors = normalizeAuthors(payload.authors);
   const audio = sanitizePodcastAudio(payload.audio);
   if (!audio) {
-    throw new Error("Podcast audio is required");
+    throw new Error(userMessage("audioRequired"));
   }
   return {
     title,
@@ -1185,7 +1179,7 @@ function sanitizePodcastUpdatePayload(payload = {}) {
   if (Object.prototype.hasOwnProperty.call(payload, "title")) {
     const title = typeof payload.title === "string" ? payload.title.trim() : "";
     if (!title) {
-      throw new Error("Title is required");
+      throw new Error(userMessage("titleRequired"));
     }
     update.title = title;
   }
@@ -1199,7 +1193,7 @@ function sanitizePodcastUpdatePayload(payload = {}) {
   if (Object.prototype.hasOwnProperty.call(payload, "audio")) {
     const audio = sanitizePodcastAudio(payload.audio);
     if (!audio) {
-      throw new Error("Podcast audio is required");
+      throw new Error(userMessage("audioRequired"));
     }
     update.audio = audio;
   }
@@ -1283,7 +1277,7 @@ router.get("/articles", requireAuth, async (req, res) => {
     });
   } catch (err) {
     console.error("Failed to load dashboard articles", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -1299,7 +1293,7 @@ router.get("/podcasts", requireAuth, async (req, res) => {
     });
   } catch (err) {
     console.error("Failed to load dashboard podcasts", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -1327,11 +1321,11 @@ router.post("/articles", requireAdmin, async (req, res) => {
       .status(201)
       .json({ article: formatArticleDoc({ ...doc, _id: result.insertedId }) });
   } catch (err) {
-    if (err.message === "Title is required") {
+    if (err.message === userMessage("titleRequired")) {
       return res.status(400).json({ error: err.message });
     }
     console.error("Failed to create dashboard article", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -1340,7 +1334,7 @@ router.put("/articles/:id", requireAdmin, async (req, res) => {
     const { id } = req.params;
     const update = sanitizeArticleUpdatePayload(req.body || {});
     if (!Object.keys(update).length) {
-      return res.status(400).json({ error: "No valid fields to update" });
+      return res.status(400).json({ error: userMessage("noValidFields") });
     }
 
     if (update.attachments) {
@@ -1372,16 +1366,16 @@ router.put("/articles/:id", requireAdmin, async (req, res) => {
     }
 
     if (!updatedDoc) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ article: formatArticleDoc(updatedDoc) });
   } catch (err) {
-    if (err.message === "Title is required") {
+    if (err.message === userMessage("titleRequired")) {
       return res.status(400).json({ error: err.message });
     }
     console.error("Failed to update dashboard article", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -1391,7 +1385,7 @@ router.delete("/articles/:id", requireAdmin, async (req, res) => {
     const articleDoc = await findDashboardArticle(id);
 
     if (!articleDoc) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     const articles = getCollection("dashboard_articles");
@@ -1427,7 +1421,7 @@ router.delete("/articles/:id", requireAdmin, async (req, res) => {
     }
 
     if (!deleted) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     try {
@@ -1439,23 +1433,22 @@ router.delete("/articles/:id", requireAdmin, async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error("Failed to delete dashboard article", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
 router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
   if (!isMailConfigured()) {
-    return res.status(503).json({
-      error:
-        "Email service is not configured. Set SMTP credentials to enable notifications.",
-    });
+    return res
+      .status(503)
+      .json({ error: userMessage("emailServiceUnavailable") });
   }
 
   try {
     const { id } = req.params;
     const articleDoc = await findDashboardArticle(id);
     if (!articleDoc) {
-      return res.status(404).json({ error: "Article not found" });
+      return res.status(404).json({ error: userMessage("articleNotFound") });
     }
 
     const existingNotification = formatNotificationState(
@@ -1464,7 +1457,7 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
     if (existingNotification.sent) {
       return res
         .status(409)
-        .json({ error: "Notification already sent for this article." });
+        .json({ error: userMessage("notificationAlreadySentArticle") });
     }
 
     const article = formatArticleDoc(articleDoc, { req });
@@ -1475,7 +1468,7 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
     if (!recipients.length) {
       return res
         .status(400)
-        .json({ error: "No notification recipients configured" });
+        .json({ error: userMessage("notificationRecipientsMissing") });
     }
 
     const alertTypeRaw =
@@ -1623,7 +1616,7 @@ router.post("/articles/:id/notify", requireAdmin, async (req, res) => {
         ? err.statusCode
         : 500;
     res.status(status).json({
-      error: "Failed to send article notification",
+      error: userMessage("articleNotificationFailed"),
       details: err?.message || null,
       code: err?.code || null,
       response: err?.response || null,
@@ -1646,7 +1639,7 @@ router.post(
     try {
       ensureR2Configured();
       if (!req.file) {
-        return res.status(400).json({ error: "No image uploaded" });
+        return res.status(400).json({ error: userMessage("imageRequired") });
       }
 
       const cleanOriginalName = decodeUploadFilename(req.file.originalname);
@@ -1684,10 +1677,7 @@ router.post(
       console.error("Article image upload failed", err);
       const status = err?.statusCode || 500;
       res.status(status).json({
-        error:
-          err?.code === "R2_NOT_CONFIGURED"
-            ? err.message
-            : "Image upload failed",
+        error: userMessage("imageUploadFailed"),
         details: err?.code === "R2_NOT_CONFIGURED" ? err.missing : undefined,
       });
     }
@@ -1709,7 +1699,7 @@ router.post(
     try {
       ensureR2Configured();
       if (!req.file) {
-        return res.status(400).json({ error: "No audio uploaded" });
+        return res.status(400).json({ error: userMessage("audioRequired") });
       }
 
       const cleanOriginalName = decodeUploadFilename(req.file.originalname);
@@ -1747,10 +1737,7 @@ router.post(
       console.error("Article audio upload failed", err);
       const status = err?.statusCode || 500;
       res.status(status).json({
-        error:
-          err?.code === "R2_NOT_CONFIGURED"
-            ? err.message
-            : "Audio upload failed",
+        error: userMessage("fileUploadFailed"),
         details: err?.code === "R2_NOT_CONFIGURED" ? err.missing : undefined,
       });
     }
@@ -1772,7 +1759,9 @@ router.post(
     try {
       ensureR2Configured();
       if (!req.file) {
-        return res.status(400).json({ error: "No attachment uploaded" });
+        return res
+          .status(400)
+          .json({ error: userMessage("attachmentRequired") });
       }
 
       const cleanOriginalName = decodeUploadFilename(req.file.originalname);
@@ -1834,10 +1823,7 @@ router.post(
       console.error("Article attachment upload failed", err);
       const status = err?.statusCode || 500;
       res.status(status).json({
-        error:
-          err?.code === "R2_NOT_CONFIGURED"
-            ? err.message
-            : "Attachment upload failed",
+        error: userMessage("fileUploadFailed"),
         details: err?.code === "R2_NOT_CONFIGURED" ? err.missing : undefined,
       });
     }
@@ -1859,7 +1845,7 @@ router.get("/articles/documents", requireAdmin, async (req, res) => {
     });
   } catch (err) {
     console.error("Failed to load article documents", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -1878,7 +1864,7 @@ router.post(
     try {
       ensureR2Configured();
       if (!req.file) {
-        return res.status(400).json({ error: "No audio uploaded" });
+        return res.status(400).json({ error: userMessage("audioRequired") });
       }
 
       const cleanOriginalName = decodeUploadFilename(req.file.originalname);
@@ -1916,10 +1902,7 @@ router.post(
       console.error("Podcast audio upload failed", err);
       const status = err?.statusCode || 500;
       res.status(status).json({
-        error:
-          err?.code === "R2_NOT_CONFIGURED"
-            ? err.message
-            : "Audio upload failed",
+        error: userMessage("fileUploadFailed"),
         details: err?.code === "R2_NOT_CONFIGURED" ? err.missing : undefined,
       });
     }
@@ -1949,7 +1932,7 @@ router.post("/podcasts", requireAdmin, async (req, res) => {
       return res.status(400).json({ error: err.message });
     }
     console.error("Failed to create podcast", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -1958,7 +1941,7 @@ router.put("/podcasts/:id", requireAdmin, async (req, res) => {
     const { id } = req.params;
     const update = sanitizePodcastUpdatePayload(req.body || {});
     if (!Object.keys(update).length) {
-      return res.status(400).json({ error: "No valid fields to update" });
+      return res.status(400).json({ error: userMessage("noValidFields") });
     }
 
     update.updated_at = new Date();
@@ -1984,7 +1967,7 @@ router.put("/podcasts/:id", requireAdmin, async (req, res) => {
     }
 
     if (!updatedDoc) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ podcast: formatPodcastDoc(updatedDoc) });
@@ -1993,7 +1976,7 @@ router.put("/podcasts/:id", requireAdmin, async (req, res) => {
       return res.status(400).json({ error: err.message });
     }
     console.error("Failed to update podcast", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2003,7 +1986,7 @@ router.delete("/podcasts/:id", requireAdmin, async (req, res) => {
     const podcastDoc = await findDashboardPodcast(id);
 
     if (!podcastDoc) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     const podcasts = getCollection("dashboard_podcasts");
@@ -2039,7 +2022,7 @@ router.delete("/podcasts/:id", requireAdmin, async (req, res) => {
     }
 
     if (!deleted) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     try {
@@ -2051,30 +2034,29 @@ router.delete("/podcasts/:id", requireAdmin, async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error("Failed to delete podcast", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
 router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
   if (!isMailConfigured()) {
-    return res.status(503).json({
-      error:
-        "Email service is not configured. Set SMTP credentials to enable notifications.",
-    });
+    return res
+      .status(503)
+      .json({ error: userMessage("emailServiceUnavailable") });
   }
 
   try {
     const { id } = req.params;
     const podcastDoc = await findDashboardPodcast(id);
     if (!podcastDoc) {
-      return res.status(404).json({ error: "Podcast not found" });
+      return res.status(404).json({ error: userMessage("podcastNotFound") });
     }
 
     const podcast = formatPodcastDoc(podcastDoc);
     if (!podcast?.audio) {
       return res
         .status(400)
-        .json({ error: "Podcast audio is missing or invalid" });
+        .json({ error: userMessage("podcastAudioInvalid") });
     }
 
     const existingNotification = formatNotificationState(
@@ -2083,7 +2065,7 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
     if (existingNotification.sent) {
       return res
         .status(409)
-        .json({ error: "Notification already sent for this podcast." });
+        .json({ error: userMessage("notificationAlreadySentPodcast") });
     }
 
     const recipients = await getNotificationRecipients(
@@ -2092,7 +2074,7 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
     if (!recipients.length) {
       return res
         .status(400)
-        .json({ error: "No notification recipients configured" });
+        .json({ error: userMessage("notificationRecipientsMissing") });
     }
 
     const alertTypeRaw =
@@ -2265,7 +2247,7 @@ router.post("/podcasts/:id/notify", requireAdmin, async (req, res) => {
         ? err.statusCode
         : 500;
     res.status(status).json({
-      error: "Failed to send podcast notification",
+      error: userMessage("podcastNotificationFailed"),
       details: err?.message || null,
       code: err?.code || null,
       response: err?.response || null,
@@ -2283,7 +2265,7 @@ router.get("/notes", async (req, res) => {
     res.json({ notes: result.map(formatNoteDoc) });
   } catch (err) {
     console.error("Failed to load dashboard notes", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2295,10 +2277,12 @@ router.post("/notes", requireAdmin, async (req, res) => {
     const author =
       typeof req.body?.author === "string" ? req.body.author.trim() : "";
     if (!title) {
-      return res.status(400).json({ error: "Title is required" });
+      return res.status(400).json({ error: userMessage("titleRequired") });
     }
     if (!body) {
-      return res.status(400).json({ error: "Note content is required" });
+      return res
+        .status(400)
+        .json({ error: userMessage("noteContentRequired") });
     }
 
     const now = new Date();
@@ -2320,7 +2304,7 @@ router.post("/notes", requireAdmin, async (req, res) => {
       .json({ note: formatNoteDoc({ ...doc, _id: result.insertedId }) });
   } catch (err) {
     console.error("Failed to create dashboard note", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2333,7 +2317,7 @@ router.put("/notes/:id", requireAdmin, async (req, res) => {
       const title =
         typeof req.body.title === "string" ? req.body.title.trim() : "";
       if (!title) {
-        return res.status(400).json({ error: "Title is required" });
+        return res.status(400).json({ error: userMessage("titleRequired") });
       }
       update.title = title;
     }
@@ -2342,7 +2326,9 @@ router.put("/notes/:id", requireAdmin, async (req, res) => {
       const body =
         typeof req.body.body === "string" ? req.body.body.trim() : "";
       if (!body) {
-        return res.status(400).json({ error: "Note content is required" });
+        return res
+          .status(400)
+          .json({ error: userMessage("noteContentRequired") });
       }
       update.body = body;
     }
@@ -2357,7 +2343,7 @@ router.put("/notes/:id", requireAdmin, async (req, res) => {
     }
 
     if (!Object.keys(update).length) {
-      return res.status(400).json({ error: "No valid fields to update" });
+      return res.status(400).json({ error: userMessage("noValidFields") });
     }
 
     update.updated_at = new Date();
@@ -2387,13 +2373,13 @@ router.put("/notes/:id", requireAdmin, async (req, res) => {
     }
 
     if (!updatedDoc) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ note: formatNoteDoc(updatedDoc) });
   } catch (err) {
     console.error("Failed to update dashboard note", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2420,13 +2406,13 @@ router.delete("/notes/:id", requireAdmin, async (req, res) => {
     }
 
     if (!deleted) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ success: true });
   } catch (err) {
     console.error("Failed to delete dashboard note", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2440,7 +2426,7 @@ router.get("/codespaces", async (req, res) => {
     res.json({ codespaces: result.map(formatCodespaceDoc) });
   } catch (err) {
     console.error("Failed to load dashboard codespaces", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2448,15 +2434,19 @@ router.post("/codespaces", requireAdmin, async (req, res) => {
   try {
     const payload = sanitizeCodespacePayload(req.body || {});
     if (!payload.project) {
-      return res.status(400).json({ error: "Project name is required" });
+      return res
+        .status(400)
+        .json({ error: userMessage("codespaceProjectRequired") });
     }
     if (!payload.repository) {
-      return res.status(400).json({ error: "Repository is required" });
+      return res
+        .status(400)
+        .json({ error: userMessage("codespaceRepositoryRequired") });
     }
     if (!payload.repository.includes("/")) {
       return res
         .status(400)
-        .json({ error: "Repository must be in owner/repo format" });
+        .json({ error: userMessage("codespaceRepositoryFormat") });
     }
 
     const now = new Date();
@@ -2475,7 +2465,7 @@ router.post("/codespaces", requireAdmin, async (req, res) => {
     });
   } catch (err) {
     console.error("Failed to create dashboard codespace", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2487,19 +2477,23 @@ router.put("/codespaces/:id", requireAdmin, async (req, res) => {
 
     if (req.body?.project !== undefined) {
       if (!updatePayload.project) {
-        return res.status(400).json({ error: "Project name is required" });
+        return res
+          .status(400)
+          .json({ error: userMessage("codespaceProjectRequired") });
       }
       update.project = updatePayload.project;
     }
 
     if (req.body?.repository !== undefined) {
       if (!updatePayload.repository) {
-        return res.status(400).json({ error: "Repository is required" });
+        return res
+          .status(400)
+          .json({ error: userMessage("codespaceRepositoryRequired") });
       }
       if (!updatePayload.repository.includes("/")) {
         return res
           .status(400)
-          .json({ error: "Repository must be in owner/repo format" });
+          .json({ error: userMessage("codespaceRepositoryFormat") });
       }
       update.repository = updatePayload.repository;
     }
@@ -2515,7 +2509,7 @@ router.put("/codespaces/:id", requireAdmin, async (req, res) => {
     if (req.body?.editor !== undefined) update.editor = updatePayload.editor;
 
     if (!Object.keys(update).length) {
-      return res.status(400).json({ error: "No valid fields to update" });
+      return res.status(400).json({ error: userMessage("noValidFields") });
     }
 
     update.updated_at = new Date();
@@ -2541,13 +2535,13 @@ router.put("/codespaces/:id", requireAdmin, async (req, res) => {
     }
 
     if (!updatedDoc) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ codespace: formatCodespaceDoc(updatedDoc) });
   } catch (err) {
     console.error("Failed to update dashboard codespace", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 
@@ -2570,13 +2564,13 @@ router.delete("/codespaces/:id", requireAdmin, async (req, res) => {
     }
 
     if (!deleted) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ success: true });
   } catch (err) {
     console.error("Failed to delete dashboard codespace", err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: userMessage("database") });
   }
 });
 

@@ -212,53 +212,60 @@ const API_BASE =
 
 const TEAM_MEMBERS = [
   {
-    name: "Oleksandr Kovalenko",
-    role: "Lead Engineer",
+    name: "Oleksandr Koval",
+    role: "Technical Lead",
     review:
-      "Oleksandr brings a calm leadership style and an eye for scalable architecture. He keeps the team moving forward with clarity.",
-    bio: "Over a decade of experience building resilient cloud platforms for logistics, finance, and civic-tech organizations.",
-    tenure: "Joined 2018",
-    focusAreas: ["Platform Architecture", "Security Reviews", "Tech Mentoring"],
-    location: "Kyiv, Ukraine",
+      "Oleksandr is the backbone of our technical strategy. His deep expertise ensures our platforms are robust, scalable, and secure.",
+    bio: "Ukrainian student who has a passion for technology and innovation. Has experience in web development and cloud computing. Created a full-stack project like this website. Has some knowledge in machine learning, graph building, R and C++",
+    tenure: "Joined 2025",
+    focusAreas: [
+      "Platform Architecture",
+      "Cloud Transferring",
+      "AI Integration",
+    ],
+    location: "Vinnytsia, Ukraine",
     contact: {
       email: "muaronok@gmail.com",
-      linkedin: "https://www.linkedin.com/in/oleksandr",
+      linkedin: "https://www.linkedin.com/in/oleksandr-koval-932015384/",
+      github: "https://github.com/oleksandkov",
+      website:
+        "https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/website/index.html",
     },
     image:
       "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=300&q=80",
   },
   {
-    name: "Mariana Danyliuk",
+    name: "Halyna Liubchych",
     role: "Product Strategist",
     review:
-      "Mariana translates customer voices into actionable plans. Her roadmaps balance ambition with realistic delivery timelines.",
-    bio: "Former startup founder turned product leader focused on inclusive digital experiences for public services.",
-    tenure: "Joined 2020",
+      "Halyna translates customer voices into actionable plans. Her roadmaps balance ambition with realistic delivery timelines.",
+    bio: "Ukrainian experienced book redactor with a strong background in editing and publishing. Halyna brings a keen eye for detail and a passion for clear, impactful communication to every project.",
+    tenure: "Joined 2025",
     focusAreas: [
       "Vision & Roadmaps",
       "Stakeholder Facilitation",
       "Impact Reporting",
     ],
-    location: "Lviv, Ukraine",
+    location: "Kyiv, Ukraine",
     contact: {
-      email: "mariana@smallco.com",
-      linkedin: "https://www.linkedin.com/in/mariana",
+      email: "galina.lubchich@gmail.com",
+      linkedin: "https://www.linkedin.com/in/halyna-liubchych-9a255353/",
     },
     image:
       "https://images.unsplash.com/photo-1521570177351-293a39c1a356?auto=format&fit=crop&w=300&q=80",
   },
   {
-    name: "Taras Hrytsenko",
+    name: "Andriy Koval",
     role: "UX Researcher",
     review:
-      "Taras champions empathy in every workshop. The result is a product experience that feels intuitive and genuinely human.",
-    bio: "Researcher and service designer who has delivered evidence-based UX improvements across healthcare and education platforms.",
-    tenure: "Joined 2019",
+      "Andriy is an experienced data analyst. Worked in a field of Ai learing and data science. Have experience in R over 5 years. Strone knowledge of statistics and mathematics.",
+    bio: "Ukrainian data analyst with a strong background in statistics and mathematics. Andriy brings a methodical approach to problem-solving and a passion for uncovering insights from complex datasets.",
+    tenure: "Joined 2025",
     focusAreas: ["Field Studies", "Service Blueprints", "Accessibility Audits"],
-    location: "Odesa, Ukraine",
+    location: "Edmonton, Canada",
     contact: {
-      email: "taras@smallco.com",
-      linkedin: "https://www.linkedin.com/in/taras",
+      email: "andriy.koval@gov.ab.ca",
+      linkedin: "https://www.linkedin.com/in/andriy-v-koval/",
     },
     image:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80",

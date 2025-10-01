@@ -1,5 +1,6 @@
 import express from "express";
 import { isMailConfigured, sendMail } from "../utils/mailer.js";
+import { userMessage } from "../utils/userMessages.js";
 import { listTeamMemberEmails } from "../utils/teamDirectory.js";
 
 const router = express.Router();
@@ -115,8 +116,7 @@ function isLikelyEmail(value) {
 router.post("/", async (req, res) => {
   if (!isMailConfigured()) {
     return res.status(503).json({
-      error:
-        "Email service is not configured. Set SMTP credentials to enable contact form notifications.",
+      error: userMessage("emailServiceUnavailable"),
     });
   }
 
@@ -126,22 +126,25 @@ router.post("/", async (req, res) => {
   const message = normalizeString(req.body?.message);
 
   if (!subject) {
-    return res.status(400).json({ error: "Subject is required" });
+    return res
+      .status(400)
+      .json({ error: userMessage("contactSubjectMissing") });
   }
 
   if (!message) {
-    return res.status(400).json({ error: "Message is required" });
+    return res
+      .status(400)
+      .json({ error: userMessage("contactMessageMissing") });
   }
 
   if (!email || !isLikelyEmail(email)) {
-    return res.status(400).json({ error: "A valid email address is required" });
+    return res.status(400).json({ error: userMessage("contactEmailInvalid") });
   }
 
   const recipients = resolveContactRecipients();
   if (!recipients.length) {
     return res.status(503).json({
-      error:
-        "No contact recipients configured. Set CONTACT_FORM_RECIPIENTS or CONTACT_EMAIL in the environment.",
+      error: userMessage("contactRecipientsMissing"),
     });
   }
 
@@ -181,7 +184,7 @@ router.post("/", async (req, res) => {
         ? error.statusCode
         : 500;
     res.status(status).json({
-      error: "Failed to send contact email",
+      error: userMessage("contactSendFailed"),
       details: error?.message || null,
     });
   }

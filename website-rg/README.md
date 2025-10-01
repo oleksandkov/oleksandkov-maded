@@ -1,6 +1,6 @@
 # website-rg
 
-Full-stack site for a small company with role-based access: public pages, member dashboard, and admin panel. Backend uses Express + MongoDB with JWT auth; frontend is static HTML/CSS/JS.
+Full-stack site for RG-FIDES with role-based access: public pages, member dashboard, and admin panel. Backend uses Express + MongoDB with JWT auth; frontend is static HTML/CSS/JS.
 
 ## Features
 
@@ -10,6 +10,8 @@ Full-stack site for a small company with role-based access: public pages, member
 - Admin can create/update/delete projects
 - Admin can schedule events, generate invite templates, and email team members
 - Guest registrations require email verification via signed links
+
+For up-to-date copy references, review `docs/content-audit.md`.
 
 ## Getting Started
 
@@ -27,7 +29,7 @@ The API runs on `http://localhost:4010` by default.
 Ensure MongoDB is running locally before seeding or starting the server. You can launch a disposable instance with Docker:
 
 ```powershell
-docker run --name company-site-mongo -p 27017:27017 -d mongo:6
+docker run --name rg-fides-mongo -p 27017:27017 -d mongo:6
 ```
 
 ### Using MongoDB Atlas (managed cluster)
@@ -78,7 +80,7 @@ SMTP_PORT=587
 SMTP_SECURE=false
 SMTP_USER=apikey-or-username
 SMTP_PASS=your-smtp-password
-MAIL_FROM="Small Company" <no-reply@example.com>
+MAIL_FROM="RG-FIDES" <no-reply@rg-fides.org>
 # Comma-separated list of inboxes for contact form submissions
 CONTACT_FORM_RECIPIENTS=hello@smallcompany.org
 ```

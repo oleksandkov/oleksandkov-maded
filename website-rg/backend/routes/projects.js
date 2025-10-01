@@ -12,6 +12,7 @@ import {
   buildPublicUrl,
   buildMediaProxyPath,
 } from "../utils/storage.js";
+import { userMessage } from "../utils/userMessages.js";
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
@@ -19,18 +20,19 @@ const JWT_SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
 function requireAuth(req, res, next) {
   const auth = req.headers.authorization || "";
   const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-  if (!token) return res.status(401).json({ error: "Missing token" });
+  if (!token)
+    return res.status(401).json({ error: userMessage("missingToken") });
   try {
     req.user = jwt.verify(token, JWT_SECRET);
     next();
   } catch (e) {
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: userMessage("invalidToken") });
   }
 }
 
 function requireAdmin(req, res, next) {
   if (req.user?.role !== "admin")
-    return res.status(403).json({ error: "Admin only" });
+    return res.status(403).json({ error: userMessage("adminOnly") });
   next();
 }
 
@@ -89,7 +91,7 @@ const projectImageUpload = multer({
     if (allowed.test(file.originalname)) {
       cb(null, true);
     } else {
-      cb(new Error("Invalid image type. Allowed: PNG, JPG, JPEG, GIF, WEBP"));
+      cb(new Error(userMessage("projectImageType")));
     }
   },
 });
@@ -100,7 +102,9 @@ router.get("/", async (req, res) => {
     const result = await projects.find({}).sort({ created_at: -1 }).toArray();
     res.json({ projects: result.map(formatProjectDoc) });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
@@ -119,7 +123,8 @@ router.post("/", requireAuth, requireAdmin, async (req, res) => {
       external_url,
       team_members,
     } = req.body;
-    if (!title) return res.status(400).json({ error: "Title required" });
+    if (!title)
+      return res.status(400).json({ error: userMessage("titleRequired") });
 
     const normalizedTeam = normalizeTeamMembers(team_members);
 
@@ -151,7 +156,9 @@ router.post("/", requireAuth, requireAdmin, async (req, res) => {
     });
   } catch (err) {
     console.error("Project creation failed:", err);
-    res.status(500).json({ error: "Database error", details: err.message });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err.message });
   }
 });
 
@@ -225,12 +232,14 @@ router.put("/:id", requireAuth, requireAdmin, async (req, res) => {
     }
 
     if (!updatedDoc) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     res.json({ project: formatProjectDoc(updatedDoc) });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
@@ -266,7 +275,7 @@ router.delete("/:id", requireAuth, requireAdmin, async (req, res) => {
     }
 
     if (!deleted) {
-      return res.status(404).json({ error: "Not found" });
+      return res.status(404).json({ error: userMessage("notFound") });
     }
 
     if (existingDoc?.image_storage_key) {
@@ -283,7 +292,9 @@ router.delete("/:id", requireAuth, requireAdmin, async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
@@ -294,7 +305,10 @@ router.post(
   (req, res, next) => {
     projectImageUpload.single("image")(req, res, (err) => {
       if (err) {
-        return res.status(400).json({ error: err.message });
+        return res.status(400).json({
+          error: userMessage("projectImageType"),
+          details: err?.message,
+        });
       }
       next();
     });
@@ -303,7 +317,7 @@ router.post(
     try {
       ensureR2Configured();
       if (!req.file) {
-        return res.status(400).json({ error: "No image uploaded" });
+        return res.status(400).json({ error: userMessage("imageRequired") });
       }
 
       const cleanOriginalName = decodeUploadFilename(req.file.originalname);
@@ -335,11 +349,8 @@ router.post(
       console.error("Project image upload failed", err);
       const status = err?.statusCode || 500;
       res.status(status).json({
-        error:
-          err?.code === "R2_NOT_CONFIGURED"
-            ? err.message
-            : "Image upload failed",
-        details: err?.code === "R2_NOT_CONFIGURED" ? err.missing : undefined,
+        error: userMessage("imageUploadFailed"),
+        details: err?.message || err?.missing,
       });
     }
   }

@@ -8,6 +8,7 @@ import {
   authenticateOptional,
   getUserRole,
 } from "../middleware/auth.js";
+import { userMessage } from "../utils/userMessages.js";
 import {
   decodeUploadFilename,
   deleteFromR2,
@@ -28,11 +29,7 @@ const upload = multer({
     if (allowedTypes.test(file.originalname)) {
       cb(null, true);
     } else {
-      cb(
-        new Error(
-          "Invalid file type. Allowed: PDF, DOC, DOCX, TXT, PNG, JPG, JPEG, GIF, ZIP, RAR"
-        )
-      );
+      cb(new Error(userMessage("documentFileType")));
     }
   },
 });
@@ -54,7 +51,9 @@ router.get("/", authenticateOptional, async (req, res) => {
       .toArray();
     res.json(docs.map(mapDocument));
   } catch (err) {
-    res.status(500).json({ error: "DB error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
@@ -62,7 +61,7 @@ router.post("/", authenticateToken, async (req, res) => {
   try {
     const userRole = getUserRole(req);
     if (userRole !== "admin")
-      return res.status(403).json({ error: "Forbidden" });
+      return res.status(403).json({ error: userMessage("adminOnly") });
 
     const { title, url, description, admin_only } = req.body;
     const documents = getCollection("documents");
@@ -76,7 +75,9 @@ router.post("/", authenticateToken, async (req, res) => {
     const result = await documents.insertOne(doc);
     res.json(mapDocument({ ...doc, _id: result.insertedId }));
   } catch (err) {
-    res.status(500).json({ error: "DB error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
@@ -88,11 +89,11 @@ router.post(
     try {
       const userRole = getUserRole(req);
       if (userRole !== "admin")
-        return res.status(403).json({ error: "Forbidden" });
+        return res.status(403).json({ error: userMessage("adminOnly") });
 
       ensureR2Configured();
       if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
+        return res.status(400).json({ error: userMessage("fileRequired") });
       }
 
       const { title, description, admin_only } = req.body;
@@ -140,13 +141,15 @@ router.post(
     } catch (err) {
       console.error("Upload error:", err);
       if (err?.message?.includes?.("Invalid file type")) {
-        return res.status(400).json({ error: err.message });
+        return res.status(400).json({
+          error: userMessage("documentFileType"),
+          details: err?.message,
+        });
       }
       const status = err?.statusCode || 500;
       res.status(status).json({
-        error:
-          err?.code === "R2_NOT_CONFIGURED" ? err.message : "Upload failed",
-        details: err?.code === "R2_NOT_CONFIGURED" ? err.missing : undefined,
+        error: userMessage("fileUploadFailed"),
+        details: err?.message || err?.missing,
       });
     }
   }
@@ -156,23 +159,24 @@ router.delete("/:id", authenticateToken, async (req, res) => {
   try {
     const userRole = getUserRole(req);
     if (userRole !== "admin")
-      return res.status(403).json({ error: "Forbidden" });
+      return res.status(403).json({ error: userMessage("adminOnly") });
 
     const { id } = req.params;
     const docId = toObjectId(id);
     if (!docId) {
-      return res.status(400).json({ error: "Invalid id" });
+      return res.status(400).json({ error: userMessage("invalidId") });
     }
 
     const documents = getCollection("documents");
     const doc = await documents.findOne({ _id: docId });
 
-    if (!doc) return res.status(404).json({ error: "Document not found" });
+    if (!doc)
+      return res.status(404).json({ error: userMessage("documentNotFound") });
 
     const deleteResult = await documents.deleteOne({ _id: docId });
 
     if (deleteResult.deletedCount === 0) {
-      return res.status(404).json({ error: "Document not found" });
+      return res.status(404).json({ error: userMessage("documentNotFound") });
     }
 
     if (doc.storage_key) {
@@ -192,7 +196,9 @@ router.delete("/:id", authenticateToken, async (req, res) => {
 
     res.json({ message: "Document deleted successfully" });
   } catch (err) {
-    res.status(500).json({ error: "DB error" });
+    res
+      .status(500)
+      .json({ error: userMessage("database"), details: err?.message });
   }
 });
 
