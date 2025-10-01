@@ -15,16 +15,17 @@ For up-to-date copy references, review `docs/content-audit.md`.
 
 ## Getting Started
 
-1. Backend install
+1. Install dependencies (project root)
 
 ```bash
-cd backend
+cd website-rg
 npm install
-npm run seed # creates default admin users
-npm run dev
+npm run build
+npm run seed # optional: creates default admin users
+node server.js
 ```
 
-The API runs on `http://localhost:4010` by default.
+`node server.js` starts the API on `http://localhost:4010` by default and serves the static frontend from `frontend/`. npm 10 and newer require `npm run build` (not `npm build`).
 
 Ensure MongoDB is running locally before seeding or starting the server. You can launch a disposable instance with Docker:
 
@@ -40,7 +41,7 @@ docker run --name rg-fides-mongo -p 27017:27017 -d mongo:6
    ```
    mongodb+srv://USERNAME:PASSWORD@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
    ```
-4. Update `website-rg/backend/.env` with the URI and target database name:
+4. Update `website-rg/.env` with the URI and target database name:
    ```
    MONGO_URI=mongodb+srv://USERNAME:PASSWORD@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
    MONGO_DB_NAME=company_site
@@ -62,7 +63,7 @@ Then visit `http://localhost:5173`.
 
 ## Environment
 
-`backend/.env` (optional):
+Project root `.env` (optional):
 
 ```
 PORT=4010

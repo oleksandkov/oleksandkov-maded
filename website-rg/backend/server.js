@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import { fileURLToPath } from "url";
 import { closeDb, initDb } from "./db.js";
 import { isMailConfigured, verifyMailer } from "./utils/mailer.js";
 import authRouter from "./routes/auth.js";
@@ -12,7 +13,14 @@ import dashboardRouter from "./routes/dashboard.js";
 import mediaRouter from "./routes/media.js";
 import contactRouter from "./routes/contact.js";
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT_DIR = path.resolve(__dirname, "..");
+
+const primaryEnv = dotenv.config({ path: path.join(ROOT_DIR, ".env") });
+if (primaryEnv.error) {
+  dotenv.config({ path: path.join(__dirname, ".env") });
+}
 
 const app = express();
 const PORT = process.env.PORT || 4010;
@@ -21,9 +29,9 @@ app.use(cors());
 app.use(express.json());
 
 // Serve uploaded files statically
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use("/uploads", express.static(path.join(ROOT_DIR, "uploads")));
 
-const FRONTEND_DIR = path.join(process.cwd(), "..", "frontend");
+const FRONTEND_DIR = path.join(ROOT_DIR, "frontend");
 app.use(express.static(FRONTEND_DIR));
 
 app.get("/api/health", (req, res) => {

@@ -1,1 +1,5 @@
-web: node server.js
+# Legacy placeholder to preserve history.
+
+# Render looks for the Procfile in the project root.
+
+# See ../Procfile for the active definition.
