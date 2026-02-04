@@ -9,6 +9,7 @@ format:
     transition: fade
     controls: true
     center: true
+embed-resources: false
 ---
 
 ## Що таке контейнер?
