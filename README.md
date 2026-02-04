@@ -7,7 +7,6 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 ### Personal Website
 - **[View My CV Website](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/website/index.html)** - Modern, responsive CV website
   - Built with HTML5, CSS3, and JavaScript
-  - Features: Responsive design, contact form, project showcase, skills section
   - Fully mobile-optimized with smooth animations
 
 ### External Project
@@ -17,7 +16,7 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 - **[RG-FIDES](https://github.com/RG-FIDES)** - Membership in the RG-FIDES GitHub organization
 
 ### Featured Presentation
-- **[Docker and Containers - Interactive](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qdm/Docker.html)** - View presentation online
+- **[Docker and Containers - Non-Interactive version](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qdm/Docker.html)** - View presentation online
 - **Docker and Containers** - Download versions:
   - [PDF](presentations/qmd/Docker.pdf) | [HTML](presentations/qmd/Docker.html) | [PPTX](presentations/qmd/Docker.pptx)
   - Source: [Docker.qmd](presentations/qmd/Docker.qmd)
