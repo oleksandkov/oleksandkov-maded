@@ -1,23 +1,43 @@
 # Presentations
 
-This directory contains presentations in various formats:
+Technical presentations in multiple formats.
 
-## Quarto Markdown (QMD)
-- **Location**: `qmd/`
-- **Description**: Interactive presentations created with Quarto
-- **Usage**: Render with `quarto render filename.qmd`
+## 🌐 View Online
 
-## Google Slides
-- **Location**: `google-slides/`
-- **Description**: Exported presentations from Google Slides or links to online presentations
-- **Formats**: PDF exports, presentation links, or embedded content
+**[Docker and Containers - Interactive](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/Docker%20Presentation%20%28Non-Interactive%29/Docker.html)**
 
-## PowerPoint
-- **Location**: `powerpoint/`
-- **Description**: Microsoft PowerPoint presentations
-- **Formats**: `.pptx`, `.ppt` files
+## 📁 Folders
 
-## Getting Started
-1. Choose the appropriate format for your presentation needs
-2. Use templates from the `../templates/` directory
-3. Follow naming convention: `YYYY-MM-DD-topic-name.format`
+### Docker Presentation/
+Interactive Quarto presentation with full features:
+- **Docker.qmd** - Source file
+- **Docker.html** - RevealJS output with external resources
+- **Docker.pdf** - PDF export
+- **Docker.pptx** - PowerPoint export
+- **Features**: Interactive elements, chalkboard, progressive reveals
+- **Usage**: Best for local presentations and development
+
+### Docker Presentation (Non-Interactive)/
+Web-optimized version for online hosting:
+- **Docker.qmd** - Non-interactive source
+- **Docker.html** - Self-contained HTML (all resources embedded)
+- **Features**: No fragments, chalkboard disabled, githack-ready
+- **Usage**: View online via githack or share as single file
+
+### powerpoint/
+Microsoft PowerPoint presentations:
+- Traditional `.pptx` and `.ppt` formats
+- PDF exports for universal viewing
+
+## 🛠️ Technologies
+
+- Quarto CLI
+- RevealJS
+- PowerPoint
+
+## 📞 Contact
+
+- **GitHub**: [@oleksandkov](https://github.com/oleksandkov)
+- **Email**: oleksandr.kov.dm@gmail.com
+- **LinkedIn**: [Oleksandr Koval](https://www.linkedin.com/in/oleksandr-koval-932015384/)
+- **Repository**: [oleksandkov-maded](https://github.com/oleksandkov/oleksandkov-maded)

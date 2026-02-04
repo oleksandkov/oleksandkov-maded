@@ -14,6 +14,7 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 - **[RG-FIDES Website](https://rg-fides-test-1.onrender.com/)** - Full-stack project for the Fides group (in development)
   - Deployed on Render.com with CloudFlare CDN
   - Technologies: Node.js, MongoDB, HTML, CSS, JavaScript
+- **[https://github.com/RG-FIDES]** - Membership in the RG-FIDES GitHub organization
 
 ### Featured Presentation
 - **[Docker and Containers - Interactive](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qdm/Docker.html)** - View presentation online
@@ -21,48 +22,57 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
   - [PDF](presentations/qmd/Docker.pdf) | [HTML](presentations/qmd/Docker.html) | [PPTX](presentations/qmd/Docker.pptx)
   - Source: [Docker.qmd](presentations/qmd/Docker.qmd)
 
+### Additional Sources
+- **[MonkeyType](https://monkeytype.com/profile/oleksandr_koval) - Typing Statistics**
+
 ## 📁 Repository Structure
 
 ```
 oleksandkov-maded/
 ├── 📊 presentations/          # Presentation files in multiple formats
-│   ├── qmd/                  # Quarto Markdown presentations
+│   ├── qmd/                  # Quarto Markdown presentations (development)
 │   │   ├── Docker.qmd        # Main Docker presentation source
 │   │   ├── Docker.html       # HTML output (RevealJS)
 │   │   ├── Docker.pdf        # PDF version
 │   │   ├── Docker.pptx       # PowerPoint version
-│   │   └── test.qmd          # Test presentation
-│   ├── qdm/                  # Alternative QDM format presentations
-│   ├── google-slides/        # Google Slides exports and links
-│   └── powerpoint/           # PowerPoint presentations
+│   │   ├── test.qmd          # Test presentation
+│   │   ├── images/           # Presentation images
+│   │   └── README.md         # QMD documentation
+│   ├── qdm/                  # Web-optimized presentations (githack ready)
+│   │   ├── Docker.qmd        # Non-interactive Docker presentation source
+│   │   ├── Docker.html       # Self-contained HTML (embedded resources)
+│   │   ├── images/           # Embedded pnresentation images
+│   │   └── README.md         # QDM vs QMD explanatio
+│   ├── powerpoint/           # PowerPoint presentations
+│   │   ├── Docker.pptx      # Docker presentation in PowerPoint format
+│   │   └── README.md
+│   └── README.md             # Presentations overview
 ├── 🌐 website/               # Personal CV website
 │   ├── index.html            # Main website file (30KB)
 │   ├── styles.css            # Website styling (27KB)
 │   ├── script.js             # Interactive functionality (15KB)
+│   ├── blogdown.r            # R blogdown script
 │   ├── Images/               # Website images and assets
 │   ├── downloads/            # Downloadable resources
+│   │   ├── presentations/    # Presentation downloads
+│   │   ├── scripts/          # Script downloads
+│   │   └── templates/        # Template downloads
+│   ├── presentations/        # Web-accessible presentations
+│   ├── scripts/              # Web-accessible scripts
 │   ├── audio/                # Audio resources
-│   └── README.md             # Website documentation
-├── 📑 templates/             # Reusable project templates
-│   ├── presentation-template.qmd
-│   ├── data-analysis-template.R
-│   ├── basic-program-template.cpp
-│   ├── ApplicationTemplate.java
-│   └── test.js
-├── 📈 graphs/                # Generated visualizations and charts
-│   └── README.md             # Visualization documentation
+│   └── README.md             # Website documentation (setup & customization)
 ├── 📚 docs/                  # Project documentation
 │   ├── CONTRIBUTING.md       # Contribution guidelines
 │   ├── SETUP.md              # Setup instructions
 │   └── README.md             # Documentation overview
 ├── 🔧 .github/               # GitHub configurations
-│   └── copilot-instructions.md
+│   ├── copilot-instructions.md
+│   └── .vscode/              # VS Code settings
 ├── 📦 node_modules/          # Node.js dependencies
-├── package.json              # Node.js project metadata
+├── package.json              # Node.js project metadata (nodemailer)
 ├── package-lock.json         # Dependency lock file
 ├── .gitignore                # Git ignore rules
-├── LICENSE                   # MIT License
-└── Tasks                     # Task management file
+└──  LICENSE                   # MIT License
 ```
 
 ## 🎯 Repository Purpose
@@ -137,6 +147,9 @@ Contributions, issues, and feature requests are welcome! Please check out the [C
 
 - **GitHub**: [@oleksandkov](https://github.com/oleksandkov)
 - **Repository**: [oleksandkov-maded](https://github.com/oleksandkov/oleksandkov-maded)
+- **Email**: **oleksandr.kov.dm@gmail.com**  
+Available via contact form on [my website](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/website/index.html) 
+- **LinkedIn:** [Oleksandr Koval](https://www.linkedin.com/in/oleksandr-koval-932015384/)
 
 ## 📄 License
 
