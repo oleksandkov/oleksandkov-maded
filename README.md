@@ -14,7 +14,7 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 - **[RG-FIDES Website](https://rg-fides-test-1.onrender.com/)** - Full-stack project for the Fides group (in development)
   - Deployed on Render.com with CloudFlare CDN
   - Technologies: Node.js, MongoDB, HTML, CSS, JavaScript
-- **[https://github.com/RG-FIDES]** - Membership in the RG-FIDES GitHub organization
+- **[RG-FIDES](https://github.com/RG-FIDES)** - Membership in the RG-FIDES GitHub organization
 
 ### Featured Presentation
 - **[Docker and Containers - Interactive](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qdm/Docker.html)** - View presentation online
