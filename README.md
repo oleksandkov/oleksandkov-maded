@@ -5,73 +5,76 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 ## 🌐 Live Work
 
 ### Personal Website
+
 - **[View My CV Website](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/website/index.html)** - Modern, responsive CV website
   - Built with HTML5, CSS3, and JavaScript
   - Fully mobile-optimized with smooth animations
 
 ### External Project
+
 - **[RG-FIDES Website](https://rg-fides-test-1.onrender.com/)** - Full-stack project for the Fides group (in development)
   - Deployed on Render.com with CloudFlare CDN
   - Technologies: Node.js, MongoDB, HTML, CSS, JavaScript
 - **[RG-FIDES](https://github.com/RG-FIDES)** - Membership in the RG-FIDES GitHub organization
 
 ### Featured Presentation
-- **[Docker and Containers - Non-Interactive version](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/qdm/Docker.html)** - View presentation online
+
+- **[Docker and Containers - Non-Interactive version](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/Docker%20Presentation%20%28Non-Interactive%29/Docker.html)** - View presentation online
 - **Docker and Containers** - Download versions:
-  - [PDF](presentations/qmd/Docker.pdf) | [HTML](presentations/qmd/Docker.html) | [PPTX](presentations/qmd/Docker.pptx)
-  - Source: [Docker.qmd](presentations/qmd/Docker.qmd)
+  - [PDF](presentations/Docker%20Presentation/Docker.pdf) | [HTML](presentations/Docker%20Presentation/Docker.html) | [PPTX](presentations/Docker%20Presentation/Docker.pptx)
+  - Source: [Docker.qmd](presentations/Docker%20Presentation/Docker.qmd)
+- **.github folder in the repository** - Dowload versions:
+  - [PDF](presentations/.github%20Presentation/github%20folder%20in%20the%20project.pdf) | [PPTX](presentations/.github%20Presentation/github%20folder%20in%20the%20project.pptx)
 
 ### Additional Sources
+
 - **[MonkeyType](https://monkeytype.com/profile/oleksandr_koval) - Typing Statistics**
+
+### Certifications
+
+- **[Understanding Prompt Engineering - DATACAMP](docs/certifications/Understanding%20Prompt%20Engineering.pdf)** - Fundamentals of prompt engineering for AI models
+- **[Introduction to git - DATACAMP](docs/certifications/introduction_git.pdf)** - Git version control fundamentals
+- **[Intermediate Git - DATACAMP](docs/certifications/intermediate_git.pdf)** - Advanced Git techniques and workflows
+- **[Introduction to GitHub Concepts- DATACAMP](docs/certifications/Introduction%20to%20GitHub%20Concepts.pdf)** - Basics of GitHub and version control
+- **[Intermediate GitHub Concepts - DATACAMP](docs/certifications/Intermediate%20GitHub%20Concepts.pdf)** - Advanced GitHub concepts and workflows
+- **[GitHub Foundations - DATACAMP](docs/certifications/GitHub%20Foundations.pdf)** - GitHub certification in version control and collaboration
 
 ## 📁 Repository Structure
 
-```
+```text
 oleksandkov-maded/
-├── 📊 presentations/          # Presentation files in multiple formats
-│   ├── qmd/                  # Quarto Markdown presentations (development)
-│   │   ├── Docker.qmd        # Main Docker presentation source
-│   │   ├── Docker.html       # HTML output (RevealJS)
-│   │   ├── Docker.pdf        # PDF version
-│   │   ├── Docker.pptx       # PowerPoint version
-│   │   ├── test.qmd          # Test presentation
-│   │   ├── images/           # Presentation images
-│   │   └── README.md         # QMD documentation
-│   ├── qdm/                  # Web-optimized presentations (githack ready)
-│   │   ├── Docker.qmd        # Non-interactive Docker presentation source
-│   │   ├── Docker.html       # Self-contained HTML (embedded resources)
-│   │   ├── images/           # Embedded pnresentation images
-│   │   └── README.md         # QDM vs QMD explanatio
-│   ├── powerpoint/           # PowerPoint presentations
-│   │   ├── Docker.pptx      # Docker presentation in PowerPoint format
-│   │   └── README.md
-│   └── README.md             # Presentations overview
-├── 🌐 website/               # Personal CV website
-│   ├── index.html            # Main website file (30KB)
-│   ├── styles.css            # Website styling (27KB)
-│   ├── script.js             # Interactive functionality (15KB)
-│   ├── blogdown.r            # R blogdown script
-│   ├── Images/               # Website images and assets
-│   ├── downloads/            # Downloadable resources
-│   │   ├── presentations/    # Presentation downloads
-│   │   ├── scripts/          # Script downloads
-│   │   └── templates/        # Template downloads
-│   ├── presentations/        # Web-accessible presentations
-│   ├── scripts/              # Web-accessible scripts
-│   ├── audio/                # Audio resources
-│   └── README.md             # Website documentation (setup & customization)
-├── 📚 docs/                  # Project documentation
-│   ├── CONTRIBUTING.md       # Contribution guidelines
-│   ├── SETUP.md              # Setup instructions
-│   └── README.md             # Documentation overview
-├── 🔧 .github/               # GitHub configurations
-│   ├── copilot-instructions.md
-│   └── .vscode/              # VS Code settings
-├── 📦 node_modules/          # Node.js dependencies
-├── package.json              # Node.js project metadata (nodemailer)
-├── package-lock.json         # Dependency lock file
-├── .gitignore                # Git ignore rules
-└──  LICENSE                   # MIT License
+├── .github/
+│   └── copilot-instructions.md
+├── .gitignore
+├── .vscode/
+├── docs/
+│   ├── CONTRIBUTING.md
+│   ├── README.md
+│   ├── SETUP.md
+│   └── certifications/
+├── LICENSE
+├── node_modules/
+├── package-lock.json
+├── package.json
+├── presentations/
+│   ├── .github Presentation/
+│   ├── Docker Presentation/
+│   ├── Docker Presentation (Non-Interactive)/
+│   ├── README.md
+│   └── powerpoint/
+└── website/
+    ├── README.md
+    ├── audio/
+    ├── blogdown.r
+    ├── downloads/
+    │   ├── presentations/
+    │   ├── scripts/
+    │   └── templates/
+    ├── Images/
+    ├── index.html
+    ├── presentations/
+    ├── script.js
+    └── scripts/
 ```
 
 ## 🎯 Repository Purpose
@@ -93,6 +96,7 @@ This repository serves as a professional portfolio and resource collection featu
 ### Quick Start
 
  **Clone the repository**:
+
    ```bash
    git clone https://github.com/oleksandkov/oleksandkov-maded.git
    cd oleksandkov-maded
@@ -104,18 +108,18 @@ This repository serves as a professional portfolio and resource collection featu
 For full development capabilities:
 - See [SETUP.md](docs/SETUP.md) for detailed setup instructions
 - Review [CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines
-- Install Quarto CLI for presentation development: https://quarto.org/docs/get-started/
+- Install [Quarto CLI](https://quarto.org/docs/get-started/) for presentation development
 
 ## 📂 Key Directories
 
 ### Presentations (`presentations/`)
 Contains technical presentations with multiple output formats:
-- **qmd/**: Quarto presentations
+- **Docker Presentation/**: Interactive Quarto presentation
   - **Docker.qmd**: Complete Docker and Containers presentation
   - Output formats: HTML (RevealJS), PDF, PowerPoint
   - Interactive slides with code highlighting
-- **qdm/**: Alternative QDM format presentations
-- **google-slides/**: Google Slides exports and links
+- **Docker Presentation (Non-Interactive)/**: Web-optimized version for online sharing
+- **.github Presentation/**: Presentation about the repository's `.github` folder
 - **powerpoint/**: Native PowerPoint files
 
 ### Website (`website/`)
