@@ -87,3 +87,4 @@ node_modules/
 !presentations/qmd/Docker.pdf
 # Certification
 !docs/certifications/**
+!presentations/*/*.pdf
