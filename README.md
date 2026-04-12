@@ -21,10 +21,10 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 
 - **[Docker and Containers - Non-Interactive version](https://raw.githack.com/oleksandkov/oleksandkov-maded/refs/heads/main/presentations/Docker%20Presentation%20%28Non-Interactive%29/Docker.html)** - View presentation online
 - **Docker and Containers** - Download versions:
-  - [PDF](presentations/Docker%20Presentation/Docker.pdf) | [HTML](presentations/Docker%20Presentation/Docker.html) | [PPTX](presentations/Docker%20Presentation/Docker.pptx)
+  - [PDF](presentations/Docker%20Presentation/) | [HTML](presentations/Docker%20Presentation/Docker.html) | [PPTX](presentations/Docker%20Presentation/Docker.pptx)
   - Source: [Docker.qmd](presentations/Docker%20Presentation/Docker.qmd)
 - **.github folder in the repository** - Dowload versions:
-  - [PDF](presentations/.github%20Presentation/github%20folder%20in%20the%20project.pdf) | [PPTX](presentations/.github%20Presentation/github%20folder%20in%20the%20project.pptx)
+  - [PDF](presentations/.github%20Presentation/) | [PPTX](presentations/.github%20Presentation/github%20folder%20in%20the%20project.pptx)
 
 ### Additional Sources
 
