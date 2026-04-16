@@ -10,6 +10,11 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
   - Built with HTML5, CSS3, and JavaScript
   - Fully mobile-optimized with smooth animations
 
+### My CV and Resume
+
+- **[CV UA (PDF)](docs/CV_AND_RESUME/CV.pdf)** - Downloadable CV in PDF format
+- **[CV ENG (PDF)](docs/CV_AND_RESUME/CV_ENG.pdf)** - Downloadable ENG CV  in PDF format
+
 ### External Project
 
 - **[RG-FIDES Website](https://rg-fides-test-1.onrender.com/)** - Full-stack project for the Fides group (in development)

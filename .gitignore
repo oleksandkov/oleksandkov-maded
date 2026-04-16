@@ -88,3 +88,4 @@ node_modules/
 # Certification
 !docs/certifications/**
 !presentations/*/*.pdf
+!docs/CV_AND_RESUME/**
