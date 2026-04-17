@@ -1487,3 +1487,51 @@ section {
     page-break-inside: avoid;
   }
 }
+
+/* ============================================
+   2026 DESIGN POLISH
+   ============================================ */
+@media screen {
+  :root {
+    --polish-shadow: 0 14px 36px rgba(15, 23, 42, 0.1);
+    --polish-border: 1px solid rgba(37, 99, 235, 0.12);
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 10% -10%, rgba(147, 197, 253, 0.18), transparent 40%),
+      radial-gradient(circle at 90% 15%, rgba(191, 219, 254, 0.2), transparent 30%),
+      #ffffff;
+  }
+
+  .hero::before {
+    background:
+      radial-gradient(circle at 22% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 48%),
+      radial-gradient(circle at 80% 72%, rgba(255, 255, 255, 0.15) 0%, transparent 45%),
+      linear-gradient(120deg, rgba(30, 64, 175, 0.22), rgba(59, 130, 246, 0.05));
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3vw, 2.75rem);
+  }
+
+  .audio-card,
+  .skill-category,
+  .project-card,
+  .work-item,
+  .contact-form,
+  .stat {
+    border: var(--polish-border);
+    box-shadow: var(--polish-shadow);
+  }
+
+  .btn {
+    border-radius: 999px;
+  }
+
+  .btn:hover,
+  .work-btn:hover,
+  .audio-btn:hover {
+    transform: translateY(-3px);
+  }
+}
