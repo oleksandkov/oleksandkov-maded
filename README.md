@@ -14,6 +14,7 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 
 - **[CV UA (PDF)](docs/CV_AND_RESUME/CV.pdf)** - Downloadable CV in PDF format
 - **[CV ENG (PDF)](docs/CV_AND_RESUME/CV_ENG.pdf)** - Downloadable ENG CV  in PDF format
+- **[Resume (PDF)](docs/CV_AND_RESUME/My_resume.pdf)** - Downloadable resume in PDF format
 
 ### External Project
 
@@ -56,6 +57,7 @@ oleksandkov-maded/
 │   ├── CONTRIBUTING.md
 │   ├── README.md
 │   ├── SETUP.md
+│   ├── CV_AND_RESUME/
 │   └── certifications/
 ├── LICENSE
 ├── node_modules/
