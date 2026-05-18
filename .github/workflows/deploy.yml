@@ -1,9 +1,7 @@
 name: Deploy Website to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -12,6 +10,10 @@ jobs:
       contents: read
       pages: write
       id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout code
