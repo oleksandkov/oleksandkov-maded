@@ -89,3 +89,5 @@ node_modules/
 !docs/certifications/**
 !presentations/*/*.pdf
 !docs/CV_AND_RESUME/**
+
+!.github/workflows/**
