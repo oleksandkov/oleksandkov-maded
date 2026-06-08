@@ -6,7 +6,7 @@ Welcome to my comprehensive portfolio repository! This collection showcases my w
 
 ### Personal Website
 
-- **[View My CV Website](https://oleksandkov.github.io/oleksandkov-maded/)** - Modern, responsive CV website
+- **[View My CV Website]([https://oleksandkov.github.io/oleksandkov-maded/](https://my-website-eta-navy.vercel.app/))** - Modern, responsive CV website
   - Built with HTML5, CSS3, and JavaScript
   - Fully mobile-optimized with smooth animations
 
