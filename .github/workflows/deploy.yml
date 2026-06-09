@@ -1,32 +1,32 @@
-name: Deploy Website to GitHub Pages
+# name: Deploy Website to GitHub Pages
 
-on:
-  workflow_dispatch:
+# on:
+#   workflow_dispatch:
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       pages: write
+#       id-token: write
     
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+#     environment:
+#       name: github-pages
+#       url: ${{ steps.deployment.outputs.page_url }}
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+#       - name: Setup Pages
+#         uses: actions/configure-pages@v4
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'website'
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v3
+#         with:
+#           path: 'website'
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+#       - name: Deploy to GitHub Pages
+#         id: deployment
+#         uses: actions/deploy-pages@v4
